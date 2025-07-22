@@ -21,5 +21,6 @@ folderStructure_toDF <- function(folder_paths) {
     # Set column names (assuming you know the max number of subdirectories)
     colnames(file_overview) <- c(paste0("level", 1:(ncol(file_overview))))
 
+    # Test commit
     return(file_overview)
 }
