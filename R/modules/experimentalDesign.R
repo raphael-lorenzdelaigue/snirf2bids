@@ -92,11 +92,8 @@ experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedP
       }
       cat("Nulls checked\n")
 
-      # Convert "Session 1" -> "ses-01", etc.
-      nirs_session_folders <- str_replace(nirs_sessions, "Session ", "ses-") |>
-        str_pad(width = 2, side = "left", pad = "0")
-
       cat("Session folders", nirs_session_folders, "\n")
+
       walk(valid_ids, function(id) {
         participant_folder <- file.path(bids_motherFolder, paste0("sub-", id))
         dir.create(participant_folder, recursive = TRUE, showWarnings = FALSE)
@@ -114,5 +111,21 @@ experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedP
         })
       showNotification(paste("Folders created sucessfully", type = "message"))
     })
+
+    # Read session structure and return it
+    session_structure <- reactive({
+      req(input$total_sessions)
+      req(input$nirs_sessions)
+
+      list(
+        all_numbers = input$total_sessions,
+        nirs_numbers = input$nirs_sessions,
+        nirs_folders = str_replace(input$nirs_sessions, "Session ", "ses-") |>
+          str_pad(width = 2, side = "left", pad = "0")
+      )
+    })
+    return(list(
+      session_structure = session_structure
+    ))
   })
 }

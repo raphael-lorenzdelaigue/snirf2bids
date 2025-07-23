@@ -11,8 +11,9 @@ folderCheck_ui <- function(id) {
   )
 }
 
-folderCheck_server <- function(id, currentConvertedPathReactive) {
+folderCheck_server <- function(id, currentConvertedPathReactive, selectedIdsReactive, sessionStructureReactive) {
   moduleServer(id, function(input, output, session) {
+    # When a new path is select, display new path content
     observeEvent(currentConvertedPathReactive(), {
       folder_path <- currentConvertedPathReactive() # Read current bidsroot path
       folder_overview <- listBidsFolders(folder_path) # Read out info
@@ -25,5 +26,17 @@ folderCheck_server <- function(id, currentConvertedPathReactive) {
         datatable(bidsSubjOverview, options = list(pageLength = 20, scrollX = TRUE))
       })
     })
+
+  observeEvent(selectedIdsReactive(), {
+    selected_ids <- selectedIdsReactive()
+    cat("Selected IDs folderCheck display:\n")
+    print(selected_ids)
+  })
+
+  observeEvent(sessionStructureReactive(), {
+    session_structure <- sessionStructureReactive()
+    cat("Selected IDs session structure display:\n")
+    print(session_structure)
+  })
   })
 }

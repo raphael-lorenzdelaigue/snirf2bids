@@ -54,14 +54,15 @@ server <- function(input, output, session) {
       paste("Selected path:", currentConvertedPath())
     })
 
-  # Call modules
+  # Call modules, create necessary input and output variables
   datasetDescription_server("page1")
   Readme_server("page2")
   participant_selection <- participantSelection_server("page3", currentConvertedPath) # selected id's for folder creation
   selectedIds <- participant_selection$selected_ids
-  experimentalDesign_server("page4", selectedIds, currentConvertedPath)
+  experimental_design <- experimentalDesign_server("page4", selectedIds, currentConvertedPath)
+  sessionStructure <- experimental_design$session_structure
   fileViewer_server("page5", currentConvertedPath)
-  folderCheck_server("page6", currentConvertedPath)
+  folderCheck_server("page6", selectedIds, currentConvertedPath, sessionStructure)
 }
 
 shinyApp(ui, server)

@@ -44,6 +44,7 @@ participantSelection_server <- function(id, convertedPathReactive) {
     )
   })
 
+  # Another reactive for selected ids, that is returned by the server to main app
   selected_ids <- reactive({
     if (is.null(input$participant_overview_ui_columns_selected)) {
       return(NULL)
@@ -71,6 +72,7 @@ participantSelection_server <- function(id, convertedPathReactive) {
     showNotification(paste("List of participants has been confirmed"), type = "message")
   })
 
+  # Return reactives to main app for use in other modules
   return(list(
     selected_ids = selected_ids
   ))
