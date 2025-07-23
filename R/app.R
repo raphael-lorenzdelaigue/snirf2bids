@@ -62,7 +62,7 @@ server <- function(input, output, session) {
   experimental_design <- experimentalDesign_server("page4", selectedIds, currentConvertedPath)
   sessionStructure <- experimental_design$session_structure
   fileViewer_server("page5", currentConvertedPath)
-  folderCheck_server("page6", selectedIds, currentConvertedPath, sessionStructure)
+  folderCheck_server("page6", currentConvertedPath, selectedIds, sessionStructure)
 }
 
 shinyApp(ui, server)

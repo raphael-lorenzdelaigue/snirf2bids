@@ -1,4 +1,5 @@
 # Given folder list, creates data frame where each level of the path is saved into separate column of a dataframe
+sub_pattern <- "^sub-[A-Za-z0-9]+$"
 
 folderStructure_toDF <- function(folder_paths) {
     # Split paths into components
@@ -23,4 +24,22 @@ folderStructure_toDF <- function(folder_paths) {
 
     # Test commit
     return(file_overview)
+}
+
+# Check if a certain id is present in subject path (for a single id and path)
+checkSubjectFolderPresent <- function (id, path) {
+  expected_subfolder <- paste0("sub-", id)
+  # Use basename to get last folder name, or just check if folder_path contains expected_subfolder anywhere
+  return(grepl(expected_subfolder, path, fixed = TRUE))
+}
+
+
+subjectFolderCheck <- function(sub_ids, sub_folder_paths) {
+  return(mapply(checkSubjectFolderPresent, sub_ids, sub_folder_paths))
+}
+
+snirf2bids_folderOverview <- function(sub_ids, sub_folder_paths) {
+  df <- data.frame(subject = sub_ids,
+                   folder_present = subjectFolderCheck(sub_ids, sub_folder_paths))
+  return (df)
 }

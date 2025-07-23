@@ -46,12 +46,19 @@ participantSelection_server <- function(id, convertedPathReactive) {
 
   # Another reactive for selected ids, that is returned by the server to main app
   selected_ids <- reactive({
+    # If no column is selected just return NULL
     if (is.null(input$participant_overview_ui_columns_selected)) {
       return(NULL)
     }
+
+    # Else read ID's out of selected column
     idx <- input$participant_overview_ui_columns_selected
     df <- participant_overview_table()
-    df[[idx]]
+    vals <- df[[idx]]
+
+    # Clean from NA's and return
+    vals <- vals[!is.na(vals)]
+    vals
   })
   # Display the dataset
   # ... and allow user to select a column, which DT allows to do directly
