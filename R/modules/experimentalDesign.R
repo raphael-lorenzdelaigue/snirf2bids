@@ -117,11 +117,13 @@ experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedP
       req(input$total_sessions)
       req(input$nirs_sessions)
 
+      nirs_numbers <- str_extract(input$nirs_sessions, "\\d+")
+      nirs_folders <- paste0("ses-", str_pad(nirs_numbers, width = 2, side = "left", pad = "0"))
+
+      all_folders <- paste0("ses-", str_pad(seq_len(input$total_sessions), width = 2, pad = "0"))
       list(
-        all_numbers = input$total_sessions,
-        nirs_numbers = input$nirs_sessions,
-        nirs_folders = str_replace(input$nirs_sessions, "Session ", "ses-") |>
-          str_pad(width = 2, side = "left", pad = "0")
+        all_folders = all_folders,
+        nirs_folders = nirs_folders
       )
     })
     return(list(
