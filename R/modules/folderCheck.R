@@ -34,6 +34,7 @@ folderCheck_server <- function(id, currentConvertedPathReactive, selectedIdsReac
     }, {
       # Read BIDS subject folders
       folder_path <- currentConvertedPathReactive()
+      req(folder_path)
       folder_overview <- listBidsFolders(folder_path)
       subj_folders <- folder_overview$bidsSubjFolders
 
