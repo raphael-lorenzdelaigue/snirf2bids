@@ -1,27 +1,5 @@
-#### R AND PYTHON SETUP ####
 # Load R Packages
 library(reticulate)
-
-#### FOR PHILIPP: CREATE PYTHON 3.9 VIRTUAL ENVIRONMENT FROM R ####
-# Instead of using reticulate functions, we are running these commands from shell (which worked, even though I do not really understand why)
-python_path <- "C:/Users/siifz01/AppData/Local/Programs/Python/Python39/python.exe" # needs to be 64bit
-venv_path <- "Z:/15/A_44_RL/Projekt 3 NIRS2BIDS/Programmierung/NIRS2BIDS/py39Env"
-
-# 1. Create virtual environment on network drive
-system2(python_path, args = c("-m", "venv", shQuote(venv_path)))
-
-# 2. Activate environment and upgrade pip, setuptools, wheel
-#    Since activation scripts are shell-specific and tricky from R,
-#    you can run pip directly using the venv's python.exe
-venv_python <- file.path(venv_path, "Scripts", "python.exe")
-
-# Upgrade pip, setuptools, wheel inside venv
-system2(venv_python, args = c("-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"))
-# 3. Install packages in the venv
-system2(venv_python, args = c("-m", "pip", "install", "mne", "mne-bids", "h5py", "pathlib"))
-
-# Check if 64 bit
-system2(python_path, args = "-c \"import struct; print(struct.calcsize('P') * 8)\"")
 
 #### INSTALL NECESSARY R PACKAGES ####
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -29,7 +7,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 
 BiocManager::install("rhdf5")
 #### LOAD PYTHON ENVIRONMENT AND MODULES ####
-reticulate::use_virtualenv("./py39Env", required = TRUE)
+reticulate::use_virtualenv("./install/pyEnv", required = TRUE)
 
 # Import Python modules
 mne <- import("mne")
@@ -114,7 +92,6 @@ for (name in names(info)) {
 # Check for subject ID
 raw$info['subject_info']$his_id
 
-
 # Existing entries in Python dict can be accessed as a named list in r
 # Overview of all entries: names(raw$info)
 # Access single entry: raw$info["sfreq"]
@@ -125,3 +102,10 @@ bids_root <- pathlib$Path("C:/Users/siifz01/Documents/bids_processed")
 
 bids_path <- BIDSPath(subject = subject_id, session = "01", task = task, root = bids_root)
 write_raw_bids(raw, bids_path, overwrite=T)
+
+# Python code to run from R
+py_run_string("
+import pip
+packages = ['mne', 'mne-bids', 'h5py', 'numpy']
+pip.main(['download', '-d', 'python_wheels'] + packages)
+")
