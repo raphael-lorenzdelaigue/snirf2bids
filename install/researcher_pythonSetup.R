@@ -2,6 +2,9 @@
 venv_path <- "./install/PyEnv"
 wheels_path <- "./install/wheels"
 
+# Installations take place via system command (system2())
+# In general, all paths passed to system2() have to be transformed with shQuote()
+# Which makes sure that paths with spaces are not intepreted as multiple broken parts
 install_python_admin <- function() {
   installer <- "install/python-3.9.13-amd64.exe"
   expected_python_path <- "C:/Program Files/Python39/python.exe"
@@ -36,6 +39,10 @@ install_python_admin <- function() {
   return(expected_python_path)
 }
 
+# Installs Python 3.9 at C:\Users\xxx\AppData\Local\Programs\Python\Python39
+# Checks if installation was successful as indicated by command output
+# And double checks whether executable is found at the expected location
+# Returns path of the python.exe
 install_python_user <- function() {
   installer <- "install/python-3.9.13-amd64.exe"
   if (!file.exists(installer)) {
@@ -82,7 +89,13 @@ install_python_user <- function() {
 }
 
 create_pyEnv <- function (python_path) {
-  cat("Creating virtual environment at:\n", venv_path, "\n")
+  if (dir.exists(venv_path)) {
+    cat("⚠️ Existing virtual environment found at", venv_path, "\n")
+    cat("🧹 Removing old environment...\n")
+    unlink(venv_path, recursive = TRUE, force = TRUE)
+  }
+
+  cat("🚧 Creating new virtual environment at:\n", venv_path, "\n")
   system2(python_path, args = c("-m", "venv", shQuote(venv_path)))
 }
 
@@ -94,18 +107,28 @@ setup_pyEnv <- function() {
   cat("Upgrading pip, setuptools, and wheel...\n")
   system2(venv_python, args = c("-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"))
 
-  cat("Installing required Python packages from local wheels...\n")
-  find_links_arg <- shQuote(paste0("--find-links=", normalizePath(wheels_path))) # use Shquote to ensure that paths with spaces are passed as single shell argument
+  wheels_dir <- "./install/wheels"
+  wheels_dir <- normalizePath(wheels_dir, winslash = "/", mustWork = TRUE)
 
-  system2(
-    venv_python,
-    args = c(
-      "-m", "pip", "install",
-      "--no-index",
-      find_links_arg,
-      "mne", "mne-bids", "h5py"
-    )
-  )
+  pip_path <- file.path(venv_path, "Scripts", "pip.exe")
+  pip_path <- normalizePath(pip_path, winslash = "/", mustWork = TRUE)
+
+  # List all .whl files
+  wheels <- list.files(wheels_dir, pattern = "\\.whl$", full.names = TRUE)
+  wheels <- normalizePath(wheels, winslash = "/", mustWork = TRUE)
+
+  if (length(wheels) == 0) {
+    stop("❌ No wheels found in: ", wheels_dir)
+  }
+
+  cat("📦 Installing wheels from:\n", wheels_dir, "\n")
+
+  for (whl in wheels) {
+    cat("Installing", basename(whl), "\n")
+    args <- c("install", "--no-index", "--find-links", shQuote(wheels_dir), shQuote(whl))
+    result <- system2(pip_path, args = args)
+    if (result != 0) stop("❌ Failed to install: ", basename(whl))
+  }
 
   cat("Python environment setup complete.\n")
 
@@ -118,6 +141,14 @@ python_path <- install_python_user()
 create_pyEnv(python_path)
 setup_pyEnv()
 
+# The setup code might fail if not restarting an R session because of
+# - a locked file from a previous run (especially .pyd, .dll, or .dist-info directories),
+# - a permission error caused by something still holding onto a file (antivirus, R session, IDE, etc.),
+# - or an in-memory state issue in R (e.g., reticulate caching the Python environment or path incorrectly).
+
+# I might try to
+# - add a simple function to verify permissions or locked files if needed
+# - add a simple function to verify permissions or locked files if needed
 #### WORK IN PROGRESS ####
 find_python <- function() {
   # Try reticulate
