@@ -36,6 +36,51 @@ install_python_admin <- function() {
   return(expected_python_path)
 }
 
+install_python_user <- function() {
+  installer <- "install/python-3.9.13-amd64.exe"
+  if (!file.exists(installer)) {
+    stop("❌ Python installer not found at: ", installer)
+  }
+
+  # Get a user-writable temp path without spaces
+  user_temp <- Sys.getenv("LOCALAPPDATA")
+  if (user_temp == "") {
+    stop("LOCALAPPDATA environment variable not found.")
+  }
+  target_dir <- file.path(user_temp, "Programs", "Python", "Python39")
+  target_dir <- normalizePath(target_dir, winslash = "\\", mustWork = FALSE)
+
+  expected_python <- file.path(target_dir, "python.exe")
+  expected_python <- normalizePath(expected_python, winslash = "\\", mustWork = FALSE)
+
+  cat("⚙️ Attempting silent *user* install of Python to:", target_dir, "...\n")
+  dir.create(target_dir, recursive = TRUE, showWarnings = FALSE)
+  cat("Target directory succesfully created")
+
+  target_arg <- paste0("TargetDir=", target_dir)
+
+  status <- system2(installer, args = c(
+    "/quiet",
+    "InstallAllUsers=0",
+    "Include_launcher=0",
+    "InstallLauncherAllUsers=0",
+    "PrependPath=0",
+    "Include_test=0",
+    target_arg
+  ))
+
+  if (status != 0) {
+    stop("❌ Python installation failed with status code: ", status)
+  }
+
+  if (!file.exists(expected_python)) {
+    stop("❌ Python installed, but executable not found at: ", expected_python)
+  }
+
+  cat("✅ Python installed successfully at:", expected_python, "\n")
+  return(expected_python)
+}
+
 create_pyEnv <- function (python_path) {
   cat("Creating virtual environment at:\n", venv_path, "\n")
   system2(python_path, args = c("-m", "venv", shQuote(venv_path)))
@@ -69,7 +114,7 @@ setup_pyEnv <- function() {
 }
 
 #### RUN THIS SCRIPT ####
-python_path <- install_python_admin()
+python_path <- install_python_user()
 create_pyEnv(python_path)
 setup_pyEnv()
 
@@ -97,4 +142,41 @@ find_python <- function() {
   }
 
   return(NULL)
+}
+
+install_python_user_insideFolder <- function() {
+  installer <- "install/python-3.9.13-amd64.exe"
+  target_dir <- normalizePath("install/Python39User", winslash = "\\", mustWork = FALSE)
+  expected_python <- file.path(target_dir, "python.exe")
+
+  if (!file.exists(installer)) {
+    stop("❌ Python installer not found at: ", installer)
+  }
+
+  cat("⚙️ Attempting silent *user* install of Python...\n")
+  dir.create(target_dir, recursive = TRUE, showWarnings = FALSE)
+
+  # Wrap *entire* TargetDir=... in quotes, and avoid quoting the entire arg list again
+  target_arg <- paste0('TargetDir="', target_dir, '"')
+
+  status <- system2(installer, args = c(
+    "/quiet",
+    "InstallAllUsers=0",
+    "Include_launcher=0",
+    "InstallLauncherAllUsers=0",
+    "PrependPath=0",
+    "Include_test=0",
+    target_arg
+  ))
+
+  if (status != 0) {
+    stop("❌ Python installation failed with status code: ", status)
+  }
+
+  if (!file.exists(expected_python)) {
+    stop("❌ Python installed, but executable not found at: ", expected_python)
+  }
+
+  cat("✅ Python installed successfully at:", expected_python, "\n")
+  return(expected_python)
 }
