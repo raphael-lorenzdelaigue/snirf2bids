@@ -1,11 +1,6 @@
 # Load R Packages
 library(reticulate)
 
-#### INSTALL NECESSARY R PACKAGES ####
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-
-BiocManager::install("rhdf5")
 #### LOAD PYTHON ENVIRONMENT AND MODULES ####
 reticulate::use_virtualenv("./install/pyEnv", required = TRUE)
 
@@ -65,6 +60,12 @@ f <- h5py$File("Z:/15/A_44_RL/Projekt 2 fNIRS/data/raw/aurora/2024-10-29/2024-10
 print_hdf5_structure(f)
 
 #### READ SNIRF VIA R-NATIVE RHDF5 ####
+
+# INSTALL NECESSARY R PACKAGES
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("rhdf5")
 # List all paths in SNIRF file
 structure <- h5ls("Z:/15/A_44_RL/Projekt 2 fNIRS/data/raw/aurora/2024-10-29/2024-10-29_002/2024-10-29_002.snirf", all = TRUE)
 
