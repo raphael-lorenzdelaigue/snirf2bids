@@ -15,9 +15,13 @@ fileViewer_server <- function(id, currentConvertedPathReactive) {
   observeEvent(currentConvertedPathReactive(), {
     folder_path <- currentConvertedPathReactive()
     overview_df <- generate_file_overview(folder_path)
+    if (ncol(overview_df) == 0) {
+      showNotification("Output folder does not contain any BIDS-formatted folder", type = "message")
+    }
     output$folderTable <- renderDT({
       datatable(overview_df, options = list(pageLength = 20, scrollX = TRUE))
     })
+
   })
   })
 }
