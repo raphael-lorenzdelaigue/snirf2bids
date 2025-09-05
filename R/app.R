@@ -18,30 +18,43 @@ source("folderCheck_functions.R")
 ui <- navbarPage("NIRS2BIDS Converter",
                  tabsetPanel(
                    # In order to keep the destination path accessible to all pages of the app, I need to define corresponding UI and server in the main page
+                 tabPanel("Select Input Folder",
+                            shinyDirButton("select_InputDirectory", "Select input folder (original recordings)", "Please select input folder"), # Button for folder browser dialog
+                            verbatimTextOutput("convertedPath")),
                  tabPanel("Select Output Folder",
-                            shinyDirButton("select_directory", "Choose folder for 'converted'", "Please select a folder"), # Button for folder browser dialog
+                            shinyDirButton("select_OutputDirectory", "Select output folder (BIDS-formatted recordings)", "Please select output folder"), # Button for folder browser dialog
                             verbatimTextOutput("convertedPath")),
                  tabPanel("REQUIRED: Create dataset_description.json", datasetDescription_ui("page1")),
                  tabPanel("REQUIRED: Create Readme.md", Readme_ui("page2")),
-                 tabPanel("REQUIRED: Create Folder Structure (Step 1: Participant Information)", participantSelection_ui("page3")),
-                 tabPanel("REQUIRED: Create Folder Structure (Step 2: Experimental Design)", experimentalDesign_ui("page4")),
+                 tabPanel("REQUIRED: Specify experimental design", experimentalDesign_ui("page4")),
                  tabPanel("File Viewer", fileViewer_ui("page5")),
-                 tabPanel("Folder check", folderCheck_ui("page6"))
+                 tabPanel("Folder check", folderCheck_ui("page6")),
+                 tabPanel("EXTRA: Read participant information from existing folder structure)", participantSelection_ui("page3"))
 ))
 
 
 server <- function(input, output, session) {
   # Shared reactive path across modules
+  currentSourcePath <- reactiveVal(NULL)
   currentConvertedPath <- reactiveVal(NULL)
 
   # only returns ready-mounted, local drives -> misses Google Drive File Stream or Network-mapped drives (U:, X: etc.). Could be worked around by explicitly defining drive letters
   volumes <- shinyFiles::getVolumes()
   # Let user pick a directory
-  shinyDirChoose(input, "select_directory", roots = volumes(), session = session)
+  shinyDirChoose(input, "select_InputDirectory", roots = volumes(), session = session)
+  shinyDirChoose(input, "select_OutputDirectory", roots = volumes(), session = session)
+
+  observeEvent(input$select_InputDirectory, {
+    path <- parseDirPath(roots = volumes(), input$select_InputDirectory) # Takes raw result from input$select_OutputDirectory and converts into proper file system path
+    if (length(path) > 0 && nzchar(path)) {
+      currentSourcePath(path)
+      showNotification(paste("Source folder set to:", path), type = "message")
+    }
+  })
 
   # Extract file path from selection and store reactive value (currentConvertedPath)
-  observeEvent(input$select_directory, {
-    path <- parseDirPath(roots = volumes(), input$select_directory) # Takes raw result from input$select_directory and converts into proper file system path
+  observeEvent(input$select_OutputDirectory, {
+    path <- parseDirPath(roots = volumes(), input$select_OutputDirectory) # Takes raw result from input$select_OutputDirectory and converts into proper file system path
     if (length(path) > 0 && nzchar(path)) {
       currentConvertedPath(path)
       showNotification(paste("Target folder set to:", path), type = "message")
