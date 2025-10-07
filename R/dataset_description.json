@@ -1,6 +1,4 @@
 {
-  "Name": "my_experiment",
-  "BIDSVersion": "1.4.0",
-  "DatasetType": "raw",
-  "Authors": ["John Doe", "Jane Doe"]
+  "Name": "KODUN test",
+  "BIDSVersion": "1.4.0"
 }

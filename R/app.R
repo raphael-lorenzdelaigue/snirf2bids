@@ -79,7 +79,7 @@ server <- function(input, output, session) {
 
 
   # Call modules, create necessary input and output variables
-  datasetDescription_server("page1")
+  datasetDescription_server("page1", converted_root = currentConvertedPath)
   Readme_server("page2")
   participant_selection <- participantSelection_server("page3", currentConvertedPath) # selected id's for folder creation
   selectedIds <- participant_selection$selected_ids

@@ -30,10 +30,12 @@ datasetDescription_ui <- function(id) {
   )
 }
 
-datasetDescription_server <- function(id) {
+datasetDescription_server <- function(id, converted_root) {
   moduleServer(id, function(input, output, session) {
     observeEvent(input$save_json, {
+      req(converted_root())
       dataset_description <- list()
+      save_path <- file.path(converted_root(), "dataset_description.json")
       # Build the metadata list step by step
       # In order to make sure that no empty fields are included (cleaner)
       if (nzchar(input$Name)) dataset_description$Name <- input$Name
@@ -87,7 +89,7 @@ datasetDescription_server <- function(id) {
       # Save as JSON file
       write_json(
         dataset_description,
-        path = "dataset_description.json",
+        path = save_path,
         pretty = TRUE,
         auto_unbox = TRUE
       )
