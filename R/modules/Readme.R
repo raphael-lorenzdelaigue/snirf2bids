@@ -30,10 +30,12 @@ Readme_ui <- function(id) {
   )
 }
 
-Readme_server <- function(id) {
+Readme_server <- function(id, converted_root) {
   moduleServer(id, function(input, output, session) {
     observeEvent(input$save_Readme, {
-      writeLines(input$ReadmeEditor, "README.md")
+      req(converted_root())
+      save_path <- file.path(converted_root(), "README.md")
+      writeLines(input$ReadmeEditor, save_path)
       showNotification("Saved as README.md", type = "message")
       })
   })
