@@ -1,0 +1,13 @@
+{
+  "Name": "test",
+  "BIDSVersion": "1.4.0",
+  "GeneratedBy": [
+    {
+      "Name": "SNIRF2BIDS",
+      "Description": "Software for conversion",
+      "Container": {
+        "URI": "www.abc.com"
+      }
+    }
+  ]
+}
