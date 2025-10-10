@@ -2,9 +2,16 @@
 library(reticulate)
 library(rhdf5)
 library(jsonlite)
-reticulate::use_virtualenv("./install/PyEnv", required = TRUE)
-source("./functions/vendor_hooks.R")
+library(here)
 
+venv_path <- here("R", "install", "PyEnv")
+vendor_hooks_path <- here("R", "functions", "vendor_hooks.R")
+
+# Always normalize paths for Windows compatibility
+venv_path <- normalizePath(venv_path, winslash = "/", mustWork = FALSE)
+vendor_hooks_path <- normalizePath(vendor_hooks_path, winslash = "/", mustWork = FALSE)
+
+reticulate::use_virtualenv(venv_path, required = TRUE)
 # Import Python modules
 mne <- import("mne")
 mnebids <- import("mne_bids")

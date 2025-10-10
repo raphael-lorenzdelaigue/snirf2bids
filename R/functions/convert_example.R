@@ -1,4 +1,5 @@
 #### EXAMPLES ####
+source("./R/functions/convert.R")
 KODUN_task_map <- "./R/experiments/KODUN.csv"
 converted_root <- pathlib$Path("./converted")
 # Example of using snirf2bids with a single file
