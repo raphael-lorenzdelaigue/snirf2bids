@@ -20,16 +20,16 @@ source("functions/convert.R")
 ui <- navbarPage("NIRS2BIDS Converter",
                  tabsetPanel(
                    # In order to keep the destination path accessible to all pages of the app, I need to define corresponding UI and server in the main page
-                 tabPanel("Select Input Folder",
+                 tabPanel("1 - Select Input Folder",
                             shinyDirButton("select_InputDirectory", "Select input folder (original recordings)", "Please select input folder"), # Button for folder browser dialog
                             shinyDirButton("select_OutputDirectory", "Select output folder (BIDS-formatted recordings)", "Please select output folder")), # Button for folder browser dialog
-                 tabPanel("REQUIRED: Create dataset_description.json", datasetDescription_ui("page1")),
-                 tabPanel("REQUIRED: Create Readme.md", Readme_ui("page2")),
-                 tabPanel("REQUIRED: Specify experimental design", experimentalDesign_ui("page4")),
-                 tabPanel("Convert",actionButton("convert_button", "Convert to BIDS")),
+                 tabPanel("2 - Provide list of participant IDs)", participantSelection_ui("page1")),
+                 tabPanel("3 - Specify experimental design", experimentalDesign_ui("page2")),
+                 tabPanel("4 - Modality agnostic files: Create dataset_description.json", datasetDescription_ui("page3")),
+                 tabPanel("5 - Modality agnostic files: Create Readme.md", Readme_ui("page4")),
+                 tabPanel("6 - Convert",actionButton("convert_button", "Convert to BIDS")),
                  tabPanel("File Viewer", fileViewer_ui("page5")),
                  tabPanel("Folder check", folderCheck_ui("page6")),
-                 tabPanel("EXTRA: Read participant information from existing folder structure)", participantSelection_ui("page3"))
 ))
 
 
@@ -79,11 +79,11 @@ server <- function(input, output, session) {
 
 
   # Call modules, create necessary input and output variables
-  datasetDescription_server("page1", converted_root = currentConvertedPath)
-  Readme_server("page2", converted_root = currentConvertedPath)
-  participant_selection <- participantSelection_server("page3", currentConvertedPath) # selected id's for folder creation
+  participant_selection <- participantSelection_server("page1", currentConvertedPath) # selected id's for folder creation
+  experimental_design <- experimentalDesign_server("page2", selectedIds, currentConvertedPath)
+  datasetDescription_server("page3", converted_root = currentConvertedPath)
+  Readme_server("page4", converted_root = currentConvertedPath)
   selectedIds <- participant_selection$selected_ids
-  experimental_design <- experimentalDesign_server("page4", selectedIds, currentConvertedPath)
   sessionStructure <- experimental_design$session_structure
   fileViewer_server("page5", currentConvertedPath)
   folderCheck_server("page6", currentConvertedPath, selectedIds, sessionStructure)
