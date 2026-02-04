@@ -1,6 +1,6 @@
 #### INSTALLER FUNCTIONS ####
-venv_path <- "./install/PyEnv"
-wheels_path <- "./install/wheels"
+venv_path <- "./R/install/PyEnv"
+wheels_path <- "./R/install/wheels"
 
 # Installations take place via system command (system2())
 # In general, all paths passed to system2() have to be transformed with shQuote()
@@ -44,7 +44,7 @@ install_python_admin <- function() {
 # And double checks whether executable is found at the expected location
 # Returns path of the python.exe
 install_python_user <- function() {
-  installer <- "install/python-3.9.13-amd64.exe"
+  installer <- "./R/install/python-3.9.13-amd64.exe"
   if (!file.exists(installer)) {
     stop("❌ Python installer not found at: ", installer)
   }
@@ -107,7 +107,7 @@ setup_pyEnv <- function() {
   cat("Upgrading pip, setuptools, and wheel...\n")
   system2(venv_python, args = c("-m", "pip", "install", "--upgrade", "pip", "setuptools", "wheel"))
 
-  wheels_dir <- "./install/wheels"
+  wheels_dir <- wheels_path
   wheels_dir <- normalizePath(wheels_dir, winslash = "/", mustWork = TRUE)
 
   pip_path <- file.path(venv_path, "Scripts", "pip.exe")

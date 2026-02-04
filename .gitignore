@@ -1,4 +1,6 @@
 .Rproj.user
 .Rhistory
-install/PyEnv/
+**/install/PyEnv/
+**/install/wheels/
+**/converted/
 /install/Python39User/

@@ -90,6 +90,7 @@ get_snirf_files <- function(folder) {
   list.files(folder, pattern = "\\.snirf$", ignore.case = TRUE, full.names = TRUE)
 }
 
+# Runs SNIRF2BIDS with lapply on data directory
 convert_root <- function (source_root, converted_root, experiment_description) {
   # Initialize an empty data frame to store the results
   file_overview <- data.frame(subfolder = character(), stringsAsFactors = FALSE)
