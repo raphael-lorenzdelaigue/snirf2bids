@@ -23,13 +23,12 @@ ui <- navbarPage("NIRS2BIDS Converter",
                  tabPanel("1 - Select Input Folder",
                             shinyDirButton("select_InputDirectory", "Select input folder (original recordings)", "Please select input folder"), # Button for folder browser dialog
                             shinyDirButton("select_OutputDirectory", "Select output folder (BIDS-formatted recordings)", "Please select output folder")), # Button for folder browser dialog
-                 tabPanel("2 - Provide list of participant IDs)", participantSelection_ui("page1")),
+                 tabPanel("2 - Provide list of participant IDs", participantSelection_ui("page1")),
                  tabPanel("3 - Specify experimental design", experimentalDesign_ui("page2")),
                  tabPanel("4 - Modality agnostic files: Create dataset_description.json", datasetDescription_ui("page3")),
                  tabPanel("5 - Modality agnostic files: Create Readme.md", Readme_ui("page4")),
-                 tabPanel("6 - Convert",actionButton("convert_button", "Convert to BIDS")),
-                 tabPanel("File Viewer", fileViewer_ui("page5")),
-                 tabPanel("Folder check", folderCheck_ui("page6")),
+                 tabPanel("6 - Convert",actionButton("convert_button", "Convert to BIDS"))
+
 ))
 
 
@@ -85,8 +84,6 @@ server <- function(input, output, session) {
   Readme_server("page4", converted_root = currentConvertedPath)
   selectedIds <- participant_selection$selected_ids
   sessionStructure <- experimental_design$session_structure
-  fileViewer_server("page5", currentConvertedPath)
-  folderCheck_server("page6", currentConvertedPath, selectedIds, sessionStructure)
 }
 
 shinyApp(ui, server)

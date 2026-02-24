@@ -10,6 +10,16 @@ participantSelection_ui <- function(id) {
   ns <- NS(id)
   fluidPage(
   # File browser to load required file
+    card(
+      style = "background-color: #f8f9fa;",
+      div(
+        style = "font-size: 1.05rem;",
+        strong("Instruction:"),
+        br(),
+        "Please select the column listing all participants whose NIRS recordings you want to convert. ",
+        "A separate subfolder will be created automatically for each participant."
+      )
+    ),
   card(
     card_header("Please select the file containing the participant information. Valid formats are .csv, .tsv, .xls and .xlsx"),
     fileInput(ns("participant_overview"), label = NULL)),

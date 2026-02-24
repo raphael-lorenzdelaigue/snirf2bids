@@ -6,6 +6,15 @@ experimentalDesign_ui <- function(id) {
   fluidPage(
     # Specify experimental design
     card(
+      style = "background-color: #f8f9fa;",
+      div(
+        style = "font-size: 1.05rem;",
+        strong("Instruction:"),
+        br(),
+        "Please now specify the study design of your experiment. A session is generally defined by a day on which data – whether NIRS or not – has been recorded for a specific participant. You are free, however, to declare two sessions which took place on the same day as separate, if that corresponds better to the specific study design (for example, if a recording takes place in the morning, the participant then sleeps and then another recording takes place in the afternoon).",
+      )
+    ),
+    card(
       card_header("How many sessions take place in your experiment?"),
       numericInput(ns("total_sessions"), label = "Number of sessions: ", value = 1)
     ),
@@ -91,8 +100,6 @@ experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedP
         return()
       }
       cat("Nulls checked\n")
-
-      cat("Session folders", nirs_session_folders, "\n")
 
       walk(valid_ids, function(id) {
         participant_folder <- file.path(bids_motherFolder, paste0("sub-", id))
