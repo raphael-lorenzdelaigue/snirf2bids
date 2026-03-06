@@ -34,7 +34,7 @@ experimentalDesign_ui <- function(id) {
       uiOutput(ns("nirs_task_inputs"))
     ),
     card(
-      actionButton(ns("createParticipantFolders"), "Create Folder Structure")
+      actionButton(ns("confirmExperimentalDesign"), "Confirm experimental design")
     )
   )
 }
@@ -74,50 +74,11 @@ experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedP
     })
 
     # Create folder structure upon pressing the button
-    observeEvent(input$createParticipantFolders, {
-      cat("Button clicked: createParticipantFolders\n")
-      cat("Calling path\n")
-      bids_motherFolder <- currentConvertedPathReactive()
-      cat("Path loaded\n")
-      cat("Calling ids\n")
-      ids <- selectedIdsReactive()
-      cat("ids content:", paste(ids, collapse = ", "), "\n")
-      # Filter out empty and NA entries
-      valid_ids <- ids[nzchar(ids) & !is.na(ids)]
+    observeEvent(input$confirmExperimentalDesign, {
+      cat("Button clicked: confirmExperimentalDesign\n")
 
       total_sessions <- input$total_sessions
       nirs_sessions <- input$nirs_sessions
-
-      # Check if folder has been selected in first step
-      if (is.null(bids_motherFolder) || !dir.exists(bids_motherFolder)) {
-        showNotification("Please select an output folder first", type = "error")
-        return()
-      }
-
-      print(paste("Currently selected IDs:", valid_ids))  # Debug print to R console
-      if (is.null(valid_ids)) {
-        showNotification("No participants have been specified. Folder structure will be empty", type = "error")
-        return()
-      }
-      cat("Nulls checked\n")
-
-      walk(valid_ids, function(id) {
-        participant_folder <- file.path(bids_motherFolder, paste0("sub-", id))
-        dir.create(participant_folder, recursive = TRUE, showWarnings = FALSE)
-        cat("Created", participant_folder, "\n")
-        walk(seq_len(total_sessions), function(session_num) {
-          session_label <- paste0("Session ", session_num)
-          session_folder <- file.path(participant_folder, sprintf("ses-%02d", session_num))
-          dir.create(session_folder, recursive = TRUE, showWarnings = FALSE)
-          cat("Created", session_folder, "\n")
-          if (session_label %in% nirs_sessions) {
-            dir.create(file.path(session_folder, "nirs"), showWarnings = FALSE)
-            cat("Created", file.path(session_folder, "nirs"), "\n")
-            }
-          })
-        })
-      showNotification(paste("Folders created sucessfully", type = "message"))
-    })
 
     # Read session structure and return it
     session_structure <- reactive({
@@ -136,5 +97,6 @@ experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedP
     return(list(
       session_structure = session_structure
     ))
+  })
   })
 }
