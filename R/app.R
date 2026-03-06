@@ -1,6 +1,9 @@
 library(shiny)
 library(bslib)
 library(here)
+library(dplyr)
+library(tidyr)
+library(stringr)
 
 # Provide internally:
 # BIDS Version (in datasetDescription.R)
@@ -36,7 +39,6 @@ server <- function(input, output, session) {
   # Shared reactive path across modules
   currentSourcePath <- reactiveVal(NULL)
   currentConvertedPath <- reactiveVal(NULL)
-
   # only returns ready-mounted, local drives -> misses Google Drive File Stream or Network-mapped drives (U:, X: etc.). Could be worked around by explicitly defining drive letters
   volumes <- shinyFiles::getVolumes()
   # Let user pick a directory
@@ -79,11 +81,13 @@ server <- function(input, output, session) {
 
   # Call modules, create necessary input and output variables
   participant_selection <- participantSelection_server("page1", currentConvertedPath) # selected id's for folder creation
+
+  # Save csv from experimental Design
   experimental_design <- experimentalDesign_server("page2", selectedIds, currentConvertedPath)
+
   datasetDescription_server("page3", converted_root = currentConvertedPath)
   Readme_server("page4", converted_root = currentConvertedPath)
   selectedIds <- participant_selection$selected_ids
-  sessionStructure <- experimental_design$session_structure
 }
 
 shinyApp(ui, server)
