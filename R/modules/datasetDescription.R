@@ -17,6 +17,9 @@ datasetDescription_ui <- function(id) {
 
 datasetDescription_server <- function(id, converted_root) {
   moduleServer(id, function(input, output, session) {
+
+    dataset_name <- reactive({ input$Name }) # Define reactive for dataset name
+
     observeEvent(input$save_json, {
       req(converted_root())
       # Main list containing the json Content
@@ -40,5 +43,7 @@ datasetDescription_server <- function(id, converted_root) {
 
       showNotification("Saved as dataset_description.json", type = "message")
     })
+
+    return(list(dataset_name = dataset_name))
   })
 }

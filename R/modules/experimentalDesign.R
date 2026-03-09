@@ -29,7 +29,10 @@ library(purrr)
 #   - Reactive list containing session structure:
 #       all_folders: all session folder names (e.g., ses-01, ses-02, ...)
 #       nirs_folders: folders for sessions with NIRS measurements
-#
+#   - writes a csv file (EXPNAME_tasks.csv) which
+#   -> loads EXPNAME from the dataset description tab before
+#   -> the file contains all NIRS tasks and corresponding sessions
+#   -> multiple NIRS tasks can be separated by comma
 # Notes:
 #   - Input IDs for dynamic text fields are automatically generated
 #     based on the selected NIRS sessions.
@@ -75,10 +78,8 @@ experimentalDesign_ui <- function(id) {
   )
 }
 
-
-
 # Define server logic required to draw a histogram ----
-experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedPathReactive) {
+experimentalDesign_server <- function(id, currentConvertedPathReactive, dataset_name_reactive) {
   moduleServer(id, function(input, output, session) {
     # Update number of choices for NIRS sessions
     # ... if the value of input$total_sessions changes
@@ -119,7 +120,7 @@ experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedP
       req(input$total_sessions)                    # total sessions defined
 
       # Define path for saving data
-      save_path <- file.path(here(), "R", "experiments", "nirs_tasks.csv")
+      save_path <- file.path(here(), "R", "experiments", paste0(dataset_name_reactive(), "_tasks.csv"))
       if (!dir.exists(dirname(save_path))) {
         dir.create(dirname(save_path), recursive = TRUE)
       }
@@ -130,7 +131,6 @@ experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedP
       })
 
       names(task_names) <- input$nirs_sessions
-      str(task_names)
 
       # Check for empty entries
       if (any(task_names == "" | is.na(task_names))) {
