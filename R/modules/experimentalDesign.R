@@ -112,17 +112,31 @@ experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedP
       })
     })
 
-    experimental_design <- eventReactive(input$confirmExperimentalDesign, {
-      # collect values
-      task_names <- map_chr(str_extract(input$nirs_sessions, "\\d+"),
-                            ~ input[[paste0("nirsTasks_", .x)]])
+    # Define procedure for saving experiment description as csv
+    # when clicking on "Confirm Experimental Design"
+    observeEvent(input$confirmExperimentalDesign, {
+      req(input$nirs_sessions)                     # at least one NIRS session
+      req(input$total_sessions)                    # total sessions defined
+
+      # Define path for saving data
+      save_path <- file.path(here(), "R", "experiments", "nirs_tasks.csv")
+      if (!dir.exists(dirname(save_path))) {
+        dir.create(dirname(save_path), recursive = TRUE)
+      }
+
+      # collect values of all variables named "nirsTasks_Session x"
+      task_names <- map_chr(input$nirs_sessions, function(session_label) {
+        input[[paste0("nirsTasks_", session_label)]]
+      })
+
       names(task_names) <- input$nirs_sessions
+      str(task_names)
 
       # save CSV
       df <- tibble(session = names(task_names), task = task_names) %>%
         mutate(task = str_split(task, "\\s*,\\s*")) %>%
         unnest(task)
-      write.csv(df, "nirs_tasks.csv", row.names = FALSE)
+      write.csv(df, save_path, row.names = FALSE)
     })
   })
 }
