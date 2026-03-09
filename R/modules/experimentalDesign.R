@@ -132,6 +132,15 @@ experimentalDesign_server <- function(id, selectedIdsReactive, currentConvertedP
       names(task_names) <- input$nirs_sessions
       str(task_names)
 
+      # Check for empty entries
+      if (any(task_names == "" | is.na(task_names))) {
+        showNotification(
+          "One or more of the NIRS tasks is currently left empty. Please check you provided all names.",
+          type = "error", duration = 5
+        )
+        return()  # stop further processing
+      }
+
       # save CSV
       df <- tibble(session = names(task_names), task = task_names) %>%
         mutate(task = str_split(task, "\\s*,\\s*")) %>%
