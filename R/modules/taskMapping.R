@@ -3,26 +3,39 @@ library(DT)
 taskMapping_ui <- function(id) {
   ns <- NS(id)
   fluidPage(
-    card(fileInput(ns("csv_file"), "Load NIRS tasks CSV")),
     card(datamods::edit_data_ui(ns("mapping"))),
     card(actionButton(ns("save_csv"), "Save updated CSV"))
   )
 }
 
-taskMapping_server <- function(id) {
+taskMapping_server <- function(id, dataset_name_reactive) {
   moduleServer(id, function(input, output, session) {
 
     # Reactive to hold loaded CSV
     loaded_data <- reactiveVal(NULL)
 
-    observeEvent(input$csv_file, {
-      req(input$csv_file)
-      df <- read.csv(input$csv_file$datapath, stringsAsFactors = FALSE)
-      df$input_name <- ""
-      loaded_data(df)
-    })
-    print(loaded_data)
+    #### Load experimental design based on current experiment name ####
+    # Display error message if not working
 
+    observe({
+      req(dataset_name_reactive())
+      file_path <- file.path(here(), "R", "experiments", paste0(dataset_name_reactive(), "_tasks.csv"))
+
+      if (file.exists(file_path)) {
+        df <- read.csv(file_path, stringsAsFactors = FALSE)
+        df$input_name <- ""
+        loaded_data(df)
+      }
+      else {
+        showNotification(
+          "The experimental design has not been created yet. Please go back to the previous step.",
+          type = "error", duration = 5
+        )
+        return()  # stop further processing
+      }
+    })
+
+    #### Open datamods editing window ####
     mapping <- datamods::edit_data_server(
       id = "mapping",
       data = reactive({
@@ -34,7 +47,7 @@ taskMapping_server <- function(id) {
       add = FALSE
     )
 
-    # Save button
+    #### Save button ####
     observeEvent(input$save_csv, {
       req(mapping())
       save_path <- file.path("experiments", "nirs_tasks_updated.csv")

@@ -86,7 +86,7 @@ server <- function(input, output, session) {
 
   experimental_design <- experimentalDesign_server("page2", currentConvertedPath, dataset_name_reactive = dataset_desc$dataset_name)
   participant_selection <- participantSelection_server("page3", currentConvertedPath) # selected id's for folder creation
-  task_mapping <- taskMapping_server("page4") # selected id's for folder creation
+  task_mapping <- taskMapping_server("page4", dataset_name_reactive = dataset_desc$dataset_name) # selected id's for folder creation
   Readme_server("page5", converted_root = currentConvertedPath)
   selectedIds <- participant_selection$selected_ids
 }
