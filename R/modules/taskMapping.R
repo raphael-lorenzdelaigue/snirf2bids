@@ -16,9 +16,9 @@ taskMapping_server <- function(id) {
     loaded_data <- reactiveVal(NULL)
 
     observeEvent(input$csv_file, {
-      str(input$csv_file)
       req(input$csv_file)
       df <- read.csv(input$csv_file$datapath, stringsAsFactors = FALSE)
+      df$input_name <- ""
       loaded_data(df)
     })
     print(loaded_data)
@@ -28,7 +28,10 @@ taskMapping_server <- function(id) {
       data = reactive({
         req(loaded_data())
         loaded_data()
-      })
+      }),
+      download_csv = FALSE,
+      download_excel = FALSE,
+      add = FALSE
     )
 
     # Save button
