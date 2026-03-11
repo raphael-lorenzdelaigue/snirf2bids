@@ -12,6 +12,7 @@ venv_path <- normalizePath(venv_path, winslash = "/", mustWork = FALSE)
 vendor_hooks_path <- normalizePath(vendor_hooks_path, winslash = "/", mustWork = FALSE)
 
 reticulate::use_virtualenv(venv_path, required = TRUE)
+source(vendor_hooks_path)
 # Import Python modules
 mne <- import("mne")
 mnebids <- import("mne_bids")
