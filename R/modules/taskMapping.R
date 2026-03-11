@@ -13,24 +13,27 @@ taskMapping_server <- function(id, dataset_name_reactive) {
 
     # Reactive to hold loaded CSV
     loaded_data <- reactiveVal(NULL)
-    dataset_name <- isolate(dataset_name_reactive())  # read reactive once
+
     #### Load experimental design based on current experiment name ####
     # Display error message if not working
 
-    file_path <- file.path(here(), "R", "experiments", paste0(dataset_name, "_tasks.csv"))
+    observe({
+      req(dataset_name_reactive())
+      file_path <- file.path(here(), "R", "experiments", paste0(dataset_name_reactive(), "_tasks.csv"))
 
-    if (file.exists(file_path)) {
-      df <- read.csv(file_path, stringsAsFactors = FALSE)
-      df$input_name <- ""
-      loaded_data(df)
-    }
-    else {
-      showNotification(
-        "The experimental design has not been created yet. Please go back to the previous step.",
-        type = "error", duration = 5
-      )
-    return()  # stop further processing
-    }
+      if (file.exists(file_path)) {
+        df <- read.csv(file_path, stringsAsFactors = FALSE)
+        df$name <- ""
+        loaded_data(df)
+      }
+      else {
+        showNotification(
+          "The experimental design has not been created yet. Please go back to the previous step.",
+          type = "error", duration = 5
+        )
+        return()  # stop further processing
+      }
+    })
 
     #### Open datamods editing window ####
     mapping <- datamods::edit_data_server(
@@ -47,7 +50,7 @@ taskMapping_server <- function(id, dataset_name_reactive) {
     #### Save button ####
     observeEvent(input$save_csv, {
       req(mapping())
-      save_path <- file.path("experiments", "nirs_tasks_updated.csv")
+      save_path <- file.path("experiments", paste0(dataset_name_reactive(), "_tasks_mapped.csv"))
       if (!dir.exists(dirname(save_path))) dir.create(dirname(save_path), recursive = TRUE)
       write.csv(mapping(), save_path, row.names = FALSE)
       showNotification(paste("Saved to", save_path), type = "message")
