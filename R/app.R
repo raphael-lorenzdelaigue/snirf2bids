@@ -14,12 +14,8 @@ source("modules/participantSelection.R")
 source("modules/datasetDescription.R")
 source("modules/taskMapping.R")
 source("modules/Readme.R")
-source("modules/fileViewer.R")
 source("modules/folderCheck.R")
 
-source("generate_file_overview.R")
-source("bidsroot_overview.R")
-source("folderCheck_functions.R")
 source("functions/convert.R")
 
 ui <- navbarPage("NIRS2BIDS Converter",
