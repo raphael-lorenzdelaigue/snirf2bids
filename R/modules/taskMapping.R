@@ -23,7 +23,8 @@ taskMapping_server <- function(id, dataset_name_reactive) {
 
       if (file.exists(file_path)) {
         df <- read.csv(file_path, stringsAsFactors = FALSE)
-        df$name <- ""
+        df$name <- "" # Add new column for name
+        df$session <- sprintf("%02d", as.numeric(stringr::str_extract(df$session, "\\d+"))) # Extract and format session number in accordance with BIDS
         loaded_data(df)
       }
       else {
