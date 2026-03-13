@@ -59,7 +59,7 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description) {
       json_df$subfolder <- basename(dirname(json_path))
 
       # IF the information inside description.json matches experiment description, create BIDS path with corresponding info
-      # ELSE copy into "unknown" folder
+      # ELSE copy into "no_mapping" folder
       if (any(task_map$name == json_df$experiment)) {
         # Read task and session from the experiment overview
         json_df$task <- task_map$task[task_map$name == json_df$experiment]
@@ -69,9 +69,9 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description) {
       else {
         json_df$task <- gsub("[-_/]", "", json_df$experiment) # Remove BIDS non-conforming characters from the string
         json_df$session <- "999"
-        unknown_path <- file.path(converted_root, "unknown")
-        dir.create(unknown_path, recursive = TRUE, showWarnings = FALSE)
-        bids_path <- BIDSPath(subject = json_df$subject, session = json_df$session, task = json_df$task, root = unknown_path)
+        no_mapping_path <- file.path(converted_root, "no_mapping")
+        dir.create(no_mapping_path, recursive = TRUE, showWarnings = FALSE)
+        bids_path <- BIDSPath(subject = json_df$subject, session = json_df$session, task = json_df$task, root = no_mapping_path)
       }
       # Load data with MNE and convert to BIDS format
       raw = mne$io$read_raw_snirf(source_snirf, preload = FALSE)
