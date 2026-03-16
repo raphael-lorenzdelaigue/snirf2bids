@@ -1,10 +1,11 @@
-library(shiny)
-library(bslib)
-library(here)
-library(dplyr)
-library(tidyr)
-library(stringr)
-library(DT)
+# auto-install needed packages
+my_packages <- c("shiny", "bslib", "here", "tidyr", "bslib", "here", "DT", "stringr", "purrr", "dplyr", "BiocManager")  # Add your packages here
+
+new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
+if(length(new_packages)) install.packages(new_packages)
+
+if (!require("rhdf5"))
+  BiocManager::install("rhdf5")
 
 # Provide internally:
 # BIDS Version (in datasetDescription.R)
