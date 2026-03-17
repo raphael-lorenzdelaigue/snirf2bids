@@ -107,15 +107,13 @@ convert_root <- function (source_root, converted_root, experiment_description) {
     # Check if a SNIRF file is found
       snirfs <- get_snirf_files(subfolder)
 
-      lapply(snirfs, function(snirf_path) {
-        # Prompt for user showing which folder is being analyzed
+      for (snirf_path in snirfs) {
         parent_folder <- dirname(snirf_path)
         file_name <- tools::file_path_sans_ext(basename(snirf_path))
         cat("Processing:", file_name, "in", parent_folder, "\n")
 
-        # Move the SNIRF file to the correct position
         snirf2bids(snirf_path, converted_root, experiment_description)
-        })
+      }
 
       }
     }
