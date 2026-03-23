@@ -53,36 +53,42 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description) {
       json_content <- fromJSON(json_path)
 
       # Convert the JSON content to a data frame
-      json_df <- as.data.frame(t(unlist(json_content)), stringsAsFactors = FALSE)
+      file_tags <- as.data.frame(t(unlist(json_content)), stringsAsFactors = FALSE)
 
       # Add the subfolder name as a column
-      json_df$subfolder <- basename(dirname(json_path))
+      file_tags$subfolder <- basename(dirname(json_path))
 
-      # IF the information inside description.json matches experiment description, create BIDS path with corresponding info
-      # ELSE copy into "no_mapping" folder
-      if (any(task_map$name == json_df$experiment)) {
+      # IF the information inside description.json matches experiment description, create regular BIDS path with corresponding info
+      if (any(task_map$name == file_tags$experiment)) {
         # Read task and session from the experiment overview
-        json_df$task <- task_map$task[task_map$name == json_df$experiment]
-        json_df$session <- task_map$session[task_map$name == json_df$experiment]
-        bids_path <- BIDSPath(subject = json_df$subject, session = json_df$session, task = json_df$task, root = converted_root)
+        file_tags$task <- task_map$task[task_map$name == file_tags$experiment]
+        file_tags$session <- task_map$session[task_map$name == file_tags$experiment]
+        bids_path <- BIDSPath(subject = file_tags$subject, session = file_tags$session, task = file_tags$task, root = converted_root)
       }
+
+      # ELSE create BIDS path inside "no_mapping" folder with session "999"
       else {
-        json_df$task <- gsub("[-_/]", "", json_df$experiment) # Remove BIDS non-conforming characters from the string
-        json_df$session <- "999"
+        file_tags$task <- gsub("[-_/]", "", file_tags$experiment) # Remove BIDS non-conforming characters from the string
+        file_tags$session <- "999"
         no_mapping_path <- file.path(converted_root, "no_mapping")
         dir.create(no_mapping_path, recursive = TRUE, showWarnings = FALSE)
-        bids_path <- BIDSPath(subject = json_df$subject, session = json_df$session, task = json_df$task, root = no_mapping_path)
+        bids_path <- BIDSPath(subject = file_tags$subject, session = file_tags$session, task = file_tags$task, root = no_mapping_path)
       }
       # Load data with MNE and convert to BIDS format
       raw = mne$io$read_raw_snirf(source_snirf, preload = FALSE)
       write_raw_bids(raw, bids_path, overwrite=T)
     }
     else {
-      json_df <- data.frame()
+      file_tags <- data.frame()
     }
   }
 
-  # To add: what happens if the id is indeed specified in the SNIRF
+  # TO DO: read subject, session and task from the input folder
+  else {
+    #subject <- ("..")
+    #session <- (".")
+  }
+
 }
 
 #### CONVERT ROUTINE (ONE FOLDER) ####
