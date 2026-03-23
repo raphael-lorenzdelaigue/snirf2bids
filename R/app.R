@@ -11,7 +11,6 @@ if (!require("rhdf5"))
 # BIDS Version (in datasetDescription.R)
 # Load your modules
 source("modules/experimentalDesign.R")
-source("modules/participantSelection.R")
 source("modules/datasetDescription.R")
 source("modules/taskMapping.R")
 source("modules/Readme.R")
@@ -28,10 +27,9 @@ ui <- navbarPage("NIRS2BIDS Converter",
                             shinyDirButton("select_OutputDirectory", "Select output folder (BIDS-formatted recordings)", "Please select output folder")), # Button for folder browser dialog
                  tabPanel("2 - Modality agnostic files: Create dataset_description.json", datasetDescription_ui("page1")),
                  tabPanel("3 - Specify experimental design", experimentalDesign_ui("page2")),
-                 tabPanel("4 - Provide list of participant IDs", participantSelection_ui("page3")),
-                 tabPanel("5 - Task mapping", taskMapping_ui("page4")),
-                 tabPanel("6 - Modality agnostic files: Create Readme.md", Readme_ui("page5")),
-                 tabPanel("7 - Convert",actionButton("convert_button", "Convert to BIDS"))
+                 tabPanel("4 - Task mapping", taskMapping_ui("page3")),
+                 tabPanel("5 - Modality agnostic files: Create Readme.md", Readme_ui("page4")),
+                 tabPanel("6 - Convert",actionButton("convert_button", "Convert to BIDS"))
 
 ))
 
@@ -67,8 +65,8 @@ server <- function(input, output, session) {
   dataset_desc <- datasetDescription_server("page1", converted_root = currentConvertedPath)
   experimental_design <- experimentalDesign_server("page2", currentConvertedPath, dataset_name_reactive = dataset_desc$dataset_name)
   participant_selection <- participantSelection_server("page3", currentConvertedPath) # selected id's for folder creation
-  task_mapping <- taskMapping_server("page4",dataset_name_reactive = dataset_desc$dataset_name)
-  Readme_server("page5", converted_root = currentConvertedPath)
+  task_mapping <- taskMapping_server("page3",dataset_name_reactive = dataset_desc$dataset_name)
+  Readme_server("page4", converted_root = currentConvertedPath)
   selectedIds <- participant_selection$selected_ids
 
   #### Convert button (at the end) ####
