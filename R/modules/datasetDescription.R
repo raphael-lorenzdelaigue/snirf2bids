@@ -5,9 +5,24 @@ library(jsonlite)
 datasetDescription_ui <- function(id) {
   ns <- NS(id)
   fluidPage(
+    card(
+      style = "background-color: #f8f9fa;",
+      div(
+        style = "font-size: 1.05rem;",
+        strong("Instruction:"),
+        br(),
+        "Please now provide a general description of the dataset. The name is required; other fields are optional according to current BIDS specifications.",
+      )
+    ),
   card(
     card_header("REQUIRED"),
-    textInput(ns("Name"), label = "Dataset name: ", value = "")
+    textInput(ns("Name"), label = "Dataset name: ", value = "", width = "100%")
+  ),
+  card(
+    card_header("OPTIONAL"),
+    textAreaInput(ns("Authors"), label = "List of individuals who contributed to the creation/curation of the dataset.", value = "", rows = 3, width = "100%"),
+    textAreaInput(ns("ReferencesAndLinks"), label = "List of references to publications that contain information on the dataset. A reference may be textual or a URI.", value = "", rows = 3, width = "100%"),
+    textAreaInput(ns("datasetDOI"), label = "Digital Object Identifier of the dataset (not the corresponding paper). Should be expressed as a valid URI, not bare DOI.", value = "", rows = 3, width = "100%")
   ),
   card(
     actionButton(ns("save_json"), "Save JSON")
@@ -31,6 +46,9 @@ datasetDescription_server <- function(id, converted_root) {
       # Build the metadata list step by step
       # In order to make sure that no empty fields are included (cleaner)
       if (nzchar(input$Name)) dataset_description$Name <- input$Name
+      if (nzchar(input$Authors)) dataset_description$Authors <- input$Authors
+      if (nzchar(input$ReferencesAndLinks)) dataset_description$ReferencesAndLinks <- input$ReferencesAndLinks
+      if (nzchar(input$datasetDOI)) dataset_description$datasetDOI <- input$datasetDOI
       dataset_description$BIDSVersion <- "1.4.0"  # always included
 
       # Save as JSON file

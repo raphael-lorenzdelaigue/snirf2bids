@@ -18,11 +18,26 @@ source("modules/folderCheck.R")
 
 source("functions/convert.R")
 
-ui <- navbarPage("NIRS2BIDS Converter",
+ui <- navbarPage("SNIRF2BIDS Converter",
                  tabsetPanel(
                  id = "current_tab",
                    # In order to keep the destination path accessible to all pages of the app, I need to define corresponding UI and server in the main page
                  tabPanel("1 - Select Input Folder",
+                          card(
+                            style = "background-color: #f8f9fa;",
+                            div(
+                              style = "font-size: 1.05rem;",
+                              strong("Instruction:"),
+                              br(),
+                              "Please choose:",
+                              br(),
+                              "(1) the input folder containing the original recordings you want to convert to BIDS (must be SNIRF files).",
+                              br(),
+                              "(2) the output folder where you want to save the BIDS-formatted files.",
+                              br(),
+                              "Both folders must be located on a local hard drive as network drives might not be detected."
+                            )
+                          ),
                             shinyDirButton("select_InputDirectory", "Select input folder (original recordings)", "Please select input folder"), # Button for folder browser dialog
                             shinyDirButton("select_OutputDirectory", "Select output folder (BIDS-formatted recordings)", "Please select output folder")), # Button for folder browser dialog
                  tabPanel("2 - Modality agnostic files: Create dataset_description.json", datasetDescription_ui("page1")),

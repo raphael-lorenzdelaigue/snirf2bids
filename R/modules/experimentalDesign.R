@@ -50,7 +50,11 @@ experimentalDesign_ui <- function(id) {
         style = "font-size: 1.05rem;",
         strong("Instruction:"),
         br(),
-        "Please now specify the study design of your experiment. A session is generally defined by a day on which data – whether NIRS or not – has been recorded for a specific participant. You are free, however, to declare two sessions which took place on the same day as separate, if that corresponds better to the specific study design (for example, if a recording takes place in the morning, the participant then sleeps and then another recording takes place in the afternoon).",
+        "Please now specify the study design of your experiment.",
+        br(),
+        "A session is generally defined by a day on which data – whether fNIRS or not – has been recorded for a specific participant.",
+        br(),
+        "You are free, however, to declare two sessions which took place on the same day as separate, if that corresponds better to the specific study design (for example, if a recording takes place in the morning, the participant then sleeps and then another recording takes place in the afternoon)."
       )
     ),
     card(
@@ -59,17 +63,17 @@ experimentalDesign_ui <- function(id) {
     ),
     # Specify sessions with NIRS measurements
     card(
-      card_header("Which of this sessions contains a NIRS measurement?"),
+      card_header("Which of this sessions contains a fNIRS measurement?"),
       checkboxGroupInput(
         ns("nirs_sessions"),
-        label = "Please select the sessions containing a NIRS measurement: ",
+        label = "Please select the sessions containing a fNIRS measurement: ",
         choices = NULL,
         selected = NULL)),
     # Name the tasks for each of this sessions
     # The uiOutput is being generated dynamically depending on the selected NIRS sessions
     # (in output$nirs_task_inputs)
     card(
-      card_header("You can now name the tasks taking place in each session. These names will serve as the filenames"),
+      card_header("You can now name the fNIRS tasks taking place in each session. These names will be part of the BIDS-compliant filenames. If multiple fNIRS tasks are part of one session, please separate the task names with a comma."),
       uiOutput(ns("nirs_task_inputs"))
     ),
     card(
