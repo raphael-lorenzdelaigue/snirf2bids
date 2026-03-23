@@ -1,6 +1,7 @@
 library(shiny)
 library(shinyFiles)
 library(jsonlite)
+library(bslib)
 
 datasetDescription_ui <- function(id) {
   ns <- NS(id)

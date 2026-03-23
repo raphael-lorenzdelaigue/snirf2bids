@@ -79,10 +79,8 @@ server <- function(input, output, session) {
   #### Call modules, create necessary input and output variables ####
   dataset_desc <- datasetDescription_server("page1", converted_root = currentConvertedPath)
   experimental_design <- experimentalDesign_server("page2", currentConvertedPath, dataset_name_reactive = dataset_desc$dataset_name)
-  participant_selection <- participantSelection_server("page3", currentConvertedPath) # selected id's for folder creation
   task_mapping <- taskMapping_server("page3",dataset_name_reactive = dataset_desc$dataset_name)
   Readme_server("page4", converted_root = currentConvertedPath)
-  selectedIds <- participant_selection$selected_ids
 
   #### Convert button (at the end) ####
   observeEvent(input$convert_button, {
