@@ -3,6 +3,15 @@ library(DT)
 taskMapping_ui <- function(id) {
   ns <- NS(id)
   fluidPage(
+    card(
+      style = "background-color: #f8f9fa;",
+      div(
+        style = "font-size: 1.05rem;",
+        strong("Instruction:"),
+        br(),
+        "Please now specify how the files are named in the input folder.",
+      )
+    ),
     card(datamods::edit_data_ui(ns("mapping"))),
     card(actionButton(ns("save_csv"), "Save updated CSV"))
   )

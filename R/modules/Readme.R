@@ -5,8 +5,17 @@ Readme_ui <- function(id) {
   ns <- NS(id)
   page_fillable(
     card(
+      style = "background-color: #f8f9fa;",
+      div(
+        style = "font-size: 1.05rem;",
+        strong("Instruction:"),
+        br(),
+        "You can now create the README file for your dataset. The GUI provides guidance based on the BIDS specification to help you include the recommended information.",
+      )
+    ),
+    card(
       full_screen = TRUE,
-      card_header("Edit Markdown"),
+      card_header("Readme Editor"),
       div(
         style = "height: 100%; flex-grow: 1; display: flex; flex-direction: column;", # Concerns div element
         textAreaInput(

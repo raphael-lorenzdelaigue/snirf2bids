@@ -44,7 +44,21 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                  tabPanel("3 - Specify experimental design", experimentalDesign_ui("page2")),
                  tabPanel("4 - Task mapping", taskMapping_ui("page3")),
                  tabPanel("5 - Modality agnostic files: Create Readme.md", Readme_ui("page4")),
-                 tabPanel("6 - Convert",actionButton("convert_button", "Convert to BIDS"))
+                 tabPanel("6 - Convert",
+                          card(
+                            style = "background-color: #f8f9fa;",
+                            div(
+                              style = "font-size: 1.05rem;",
+                              strong("Instruction:"),
+                              br(),
+                              "You can now convert all detected SNIRF files from the input folder into BIDS format.",
+                              br(),
+                              "After that step has ended, you will find your recordings, alongside extracted metadata, in the BIDS-compliant subfolder structure (one folder per participant (\"sub-xxx\"), and then one subfolder per session within that folder (\"ses-xxx\").",
+                              br(),
+                              "SNIRF files that could not be mapped to your experimental structure will be placed in a separate folder called \"no_mapping\" with the session number \"999\"",
+                            )
+                          ),
+                          actionButton("convert_button", "Convert to BIDS"))
 
 ))
 
