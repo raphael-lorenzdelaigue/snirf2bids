@@ -33,20 +33,25 @@ make_output_folder <- function(file_path_reactive) {
 }
 
 #### CONVERT ROUTINE (ONE FILE) ####
-# Function that reads a source SNIRF file, checks for ID and manufacturer name
-# If there is no ID and manufacturer name = NIRx, it checks for a description.json file in the same folder containing the SNIRF
-# Reads subject ID and experiment entry from there
-# And then deducts the task name and entered value for experiment from there, based on the experiment_description file
+# Function that reads a source SNIRF file, checks for manufacturer name
+
+# If manufacturer name = NIRx, it checks for a description.json file in the same folder containing the SNIRF
+# Reads subject ID and experiment description from there
+# And then deducts the task name and session number based on task mapping
+
+# If manufacturer name is not NIRx, it reads the subject ID from parent folder
+# And automatically confers the task name "task_01" and session "01"
 snirf2bids <- function (source_snirf, converted_root, experiment_description) {
   not_converted <- c()
   # Read ID and manufacturer from inside the SNIRF
-  rhdf5_id <- h5read(source_snirf, "/nirs/metaDataTags/SubjectID")
   rhdf5_manufacturer <- h5read(source_snirf, "/nirs/metaDataTags/ManufacturerName")
   task_map <- read.csv(experiment_description, colClasses = c("session" = "character"))
 
   # If ID is not specified & manufacturer is NirX, check if there is a description.json
-  if (rhdf5_id =="" & grepl("NIRx", rhdf5_manufacturer)) {
-    json_path <- check_description_json(source_snirf)
+  # From that file, read subject ID, infer task name and session number from task mapping
+  # And use that info for conversion to BIDS
+  if (grepl("NIRx", rhdf5_manufacturer)) {
+    json_path <- check_description_json(source_snirf) # Use NIRx vendor hook
 
     if (!is.null (json_path)) {
       # Read the JSON content
@@ -83,12 +88,17 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description) {
     }
   }
 
-  # TO DO: read subject, session and task from the input folder
-  else {
-    #subject <- ("..")
-    #session <- (".")
+  # If manufacturer is not NIRx, read subject ID from parent folder
+  else if (!grepl ("NIRx", rhdf5_manufacturer)){
+    file_tags <- data.frame(
+      subject = basename(dirname(source_snirf)), # Subject ID read from subdirectory
+      task = "task_01",
+      session = "01"
+    )
+    bids_path <- BIDSPath(subject = file_tags$subject, session = file_tags$session, task = file_tags$task, root = converted_root)
+    raw = mne$io$read_raw_snirf(source_snirf, preload = FALSE)
+    write_raw_bids(raw, bids_path, overwrite=T)
   }
-
 }
 
 #### CONVERT ROUTINE (ONE FOLDER) ####
