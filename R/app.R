@@ -58,8 +58,15 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               "SNIRF files that could not be mapped to your experimental structure will be placed in a separate folder called \"no_mapping\" with the session number \"999\"",
                             )
                           ),
+                          card(radioButtons(
+                            inputId = "mapping_source",
+                            label = "Where is the experiment information stored?",
+                            choices = c(
+                              "Folder structure (subject/session subfolders)" = "folders",
+                              "Metadata file (recording-name_description.json)" = "json"
+                            )
+                          )),
                           actionButton("convert_button", "Convert to BIDS"))
-
 ))
 
 
@@ -104,7 +111,8 @@ server <- function(input, output, session) {
       convert_root(
         source_root = currentSourcePath(),
         converted_root = currentConvertedPath(),
-        experiment_description = here("R","experiments", paste0(dataset_desc$dataset_name(), "_tasks_mapped.csv"))  # or reactive, if you like
+        experiment_description = here("R","experiments", paste0(dataset_desc$dataset_name(), "_tasks_mapped.csv")),
+        routine = input$mapping_source# or reactive, if you like
       )
       showNotification("✅ Conversion complete!", type = "message")
     },

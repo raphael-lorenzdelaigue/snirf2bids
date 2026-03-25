@@ -41,7 +41,7 @@ make_output_folder <- function(file_path_reactive) {
 
 # If manufacturer name is not NIRx, it reads the subject ID from parent folder
 # And automatically confers the task name "task_01" and session "01"
-snirf2bids <- function (source_snirf, converted_root, experiment_description) {
+snirf2bids <- function (source_snirf, converted_root, experiment_description, routine) {
   # Read ID and manufacturer from inside the SNIRF
   rhdf5_manufacturer <- h5read(source_snirf, "/nirs/metaDataTags/ManufacturerName")
   task_map <- read.csv(experiment_description, colClasses = c("session" = "character"))
@@ -49,10 +49,8 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description) {
   # If ID is not specified & manufacturer is NirX, check if there is a description.json
   # From that file, read subject ID, infer task name and session number from task mapping
   # And use that info for conversion to BIDS
-  if (grepl("NIRx", rhdf5_manufacturer)) {
+  if (routine == "json") {
     json_path <- check_description_json(source_snirf) # Use NIRx vendor hook
-
-    if (!is.null (json_path)) {
       # Read the JSON content
       json_content <- fromJSON(json_path)
 
@@ -81,17 +79,13 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description) {
       # Load data with MNE and convert to BIDS format
       raw = mne$io$read_raw_snirf(source_snirf, preload = FALSE)
       write_raw_bids(raw, bids_path, overwrite=T)
-    }
-    else {
-      file_tags <- data.frame()
-    }
   }
 
   # If manufacturer is not NIRx, read subject ID from parent folder
-  else if (!grepl ("NIRx", rhdf5_manufacturer)){
+  else if (routine == "folders"){
     file_tags <- data.frame(
       subject = basename(dirname(source_snirf)), # Subject ID read from subdirectory
-      task = "task_01",
+      task = "task",
       session = "01"
     )
     bids_path <- BIDSPath(subject = file_tags$subject, session = file_tags$session, task = file_tags$task, root = converted_root)
@@ -107,7 +101,7 @@ get_snirf_files <- function(folder) {
 }
 
 # Runs SNIRF2BIDS with lapply on data directory
-convert_root <- function (source_root, converted_root, experiment_description) {
+convert_root <- function (source_root, converted_root, experiment_description, routine) {
   # Initialize an empty data frame to store the results
   file_overview <- data.frame(subfolder = character(), stringsAsFactors = FALSE)
 
@@ -127,7 +121,7 @@ convert_root <- function (source_root, converted_root, experiment_description) {
         file_name <- tools::file_path_sans_ext(basename(snirf_path))
         cat("Processing:", file_name, "in", parent_folder, "\n")
 
-        snirf2bids(snirf_path, converted_root, experiment_description)
+        snirf2bids(snirf_path, converted_root, experiment_description, routine)
       }
 
       }

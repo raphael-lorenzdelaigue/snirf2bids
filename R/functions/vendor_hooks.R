@@ -14,7 +14,7 @@ check_description_json <- function(snirf_path) {
     cat("✅ Description file found at:", json_path, "\n")
     return(json_path)
   } else {
-    cat("❌ No description file found for", base_name, "\n")
+    stop("❌ No description file found for '", base_name, "' at expected location: ", json_path)
     return(NULL)
   }
 }

@@ -12,14 +12,6 @@ taskMapping_ui <- function(id) {
         "Please now specify how the files are named in the input folder.",
       )
     ),
-    card(radioButtons(
-      inputId = "mapping_source",
-      label = "Where is the experiment information stored?",
-      choices = c(
-        "Folder structure (subject/session subfolders)" = "folders",
-        "Metadata file (recording-name_description.json)" = "json"
-      )
-    )),
     card(datamods::edit_data_ui(ns("mapping"))),
     card(actionButton(ns("save_csv"), "Save updated CSV"))
   )
