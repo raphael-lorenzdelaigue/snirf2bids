@@ -42,7 +42,6 @@ make_output_folder <- function(file_path_reactive) {
 # If manufacturer name is not NIRx, it reads the subject ID from parent folder
 # And automatically confers the task name "task_01" and session "01"
 snirf2bids <- function (source_snirf, converted_root, experiment_description) {
-  not_converted <- c()
   # Read ID and manufacturer from inside the SNIRF
   rhdf5_manufacturer <- h5read(source_snirf, "/nirs/metaDataTags/ManufacturerName")
   task_map <- read.csv(experiment_description, colClasses = c("session" = "character"))
