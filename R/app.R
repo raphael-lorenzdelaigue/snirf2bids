@@ -1,5 +1,5 @@
 # auto-install needed packages
-my_packages <- c("shiny", "bslib", "here", "tidyr", "bslib", "here", "DT", "stringr", "purrr", "dplyr", "BiocManager", "datamods")  # Add your packages here
+my_packages <- c("shiny", "bslib", "here", "tidyr", "bslib", "here", "DT", "stringr", "purrr", "dplyr", "BiocManager", "datamods", "shinyjs")  # Add your packages here
 
 new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)) install.packages(new_packages)
@@ -16,13 +16,16 @@ source("modules/taskMapping.R")
 source("modules/Readme.R")
 source("modules/folderCheck.R")
 
+library(shinyjs)
+
 source("functions/convert.R")
 
 ui <- navbarPage("SNIRF2BIDS Converter",
                  tabsetPanel(
                  id = "current_tab",
+                 shinyjs::useShinyjs(),
                    # In order to keep the destination path accessible to all pages of the app, I need to define corresponding UI and server in the main page
-                 tabPanel("1 - Select Input Folder",
+                 tabPanel("Select Input Folder",
                           card(
                             style = "background-color: #f8f9fa;",
                             div(
@@ -38,13 +41,22 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               "Both folders must be located on a local hard drive as network drives might not be detected."
                             )
                           ),
+                          card(radioButtons(
+                            inputId = "mapping_source",
+                            label = "Where is the experiment information stored?",
+                            choices = c(
+                              "Folder structure (subject/session subfolders)" = "folders",
+                              "Metadata file (recording-name_description.json)" = "json"
+                            ),
+                            width = "100%"   # makes the radio buttons container full-width
+                          )),
                             shinyDirButton("select_InputDirectory", "Select input folder (original recordings)", "Please select input folder"), # Button for folder browser dialog
                             shinyDirButton("select_OutputDirectory", "Select output folder (BIDS-formatted recordings)", "Please select output folder")), # Button for folder browser dialog
-                 tabPanel("2 - Modality agnostic files: Create dataset_description.json", datasetDescription_ui("page1")),
-                 tabPanel("3 - Specify experimental design", experimentalDesign_ui("page2")),
-                 tabPanel("4 - Task mapping", taskMapping_ui("page3")),
-                 tabPanel("5 - Modality agnostic files: Create Readme.md", Readme_ui("page4")),
-                 tabPanel("6 - Convert",
+                 tabPanel("Modality agnostic files: Create dataset_description.json", datasetDescription_ui("page1")),
+                 tabPanel("Specify experimental design", value = "experimental_design", experimentalDesign_ui("page2")),
+                 tabPanel("Task mapping", value = "task_mapping", taskMapping_ui("page3")),
+                 tabPanel("Modality agnostic files: Create Readme.md", Readme_ui("page4")),
+                 tabPanel("Convert",
                           card(
                             style = "background-color: #f8f9fa;",
                             div(
@@ -58,14 +70,6 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               "SNIRF files that could not be mapped to your experimental structure will be placed in a separate folder called \"no_mapping\" with the session number \"999\"",
                             )
                           ),
-                          card(radioButtons(
-                            inputId = "mapping_source",
-                            label = "Where is the experiment information stored?",
-                            choices = c(
-                              "Folder structure (subject/session subfolders)" = "folders",
-                              "Metadata file (recording-name_description.json)" = "json"
-                            )
-                          )),
                           actionButton("convert_button", "Convert to BIDS"))
 ))
 
@@ -88,6 +92,21 @@ server <- function(input, output, session) {
     }
   })
 
+  # Hide/show tabs for specifying experimental design if info is encoded in folder structure
+  observe({
+    if (input$mapping_source == "folders") {
+      shinyjs::hide(selector = "a[data-value='experimental_design']")
+      shinyjs::hide(selector = "a[data-value='task_mapping']")
+
+      # optional: switch to a visible tab so user doesn’t get stuck
+      updateTabsetPanel(session, "current_tab", selected = "page1")
+
+    } else {
+      shinyjs::show(selector = "a[data-value='experimental_design']")
+      shinyjs::show(selector = "a[data-value='task_mapping']")
+    }
+  })
+
   # Extract file path from selection and store reactive value (currentConvertedPath)
   observeEvent(input$select_OutputDirectory, {
     path <- parseDirPath(roots = volumes(), input$select_OutputDirectory) # Takes raw result from input$select_OutputDirectory and converts into proper file system path
@@ -107,11 +126,18 @@ server <- function(input, output, session) {
   observeEvent(input$convert_button, {
     req(currentSourcePath(), currentConvertedPath())
     showNotification("Starting conversion...", type = "message")
+
+    exp_desc <- if (input$mapping_source == "json") {
+      here("R","experiments", paste0(dataset_desc$dataset_name(), "_tasks_mapped.csv"))
+    } else {
+      NULL
+    }
+
     tryCatch({
       convert_root(
         source_root = currentSourcePath(),
         converted_root = currentConvertedPath(),
-        experiment_description = here("R","experiments", paste0(dataset_desc$dataset_name(), "_tasks_mapped.csv")),
+        experiment_description = exp_desc,
         routine = input$mapping_source# or reactive, if you like
       )
       showNotification("✅ Conversion complete!", type = "message")
