@@ -4,47 +4,47 @@ library(rhdf5)
 library(jsonlite)
 library(here)
 
-venv_path <- here("R", "install", "PyEnv")
 vendor_hooks_path <- here("R", "functions", "vendor_hooks.R")
 
 # Always normalize paths for Windows compatibility
-venv_path <- normalizePath(venv_path, winslash = "/", mustWork = FALSE)
 vendor_hooks_path <- normalizePath(vendor_hooks_path, winslash = "/", mustWork = FALSE)
 # old version (use local venv)
 #reticulate::use_virtualenv(venv_path, required = TRUE)
 # connect previously created python environment + packages
-if("mne-env" %in% conda_list()[["name"]])
-   {
-     use_condaenv("mne-env", required = TRUE)
-   } else {
+activate_mne_env <- function () {
+  if("mne-env" %in% conda_list()[["name"]])
+  {
+    use_condaenv("mne-env", required = TRUE)
+  } else {
 
-     # Install Miniconda into reticulate’s default location (no spaces in path)
-     install_miniconda()
+    # Install Miniconda into reticulate’s default location (no spaces in path)
+    install_miniconda()
 
-     # Create a new conda environment with a specific Python version
-     # conda_create("mne-env", packages = c("python=3.9.13")) #future scripts call to "mne-env"
-     ## MNE BIDS Require python 3.10 or later (?)
-     #
-     conda_create("mne-env", packages = c("python=3.10")) #future scripts call to "mne-env"
+    # Create a new conda environment with a specific Python version
+    # conda_create("mne-env", packages = c("python=3.9.13")) #future scripts call to "mne-env"
+    ## MNE BIDS Require python 3.10 or later (?)
+    #
+    conda_create("mne-env", packages = c("python=3.10")) #future scripts call to "mne-env"
 
-     # Install Python packages into that env via conda
-     conda_install("mne-env", packages = c("mne", "numpy", "scipy", "mne-bids[full]", "matplotlib", "pandas"),
-                   channel = "conda-forge")
+    # Install Python packages into that env via conda
+    conda_install("mne-env", packages = c("mne", "numpy", "scipy", "mne-bids[full]", "matplotlib", "pandas"),
+                  channel = "conda-forge")
 
-     use_condaenv("mne-env", required = TRUE)
+    use_condaenv("mne-env", required = TRUE)
+  }
+
+  # Import Python modules
+  mne <- import("mne")
+  mnebids <- import("mne_bids")
+  h5py <- import("h5py")
+  pathlib <- import("pathlib")
+
+  # Access specific Python functions & classes
+  BIDSPath <- mnebids$BIDSPath
+  write_raw_bids <- mnebids$write_raw_bids
 }
 
-
 source(vendor_hooks_path)
-# Import Python modules
-mne <- import("mne")
-mnebids <- import("mne_bids")
-h5py <- import("h5py")
-pathlib <- import("pathlib")
-
-# Access specific Python functions & classes
-BIDSPath <- mnebids$BIDSPath
-write_raw_bids <- mnebids$write_raw_bids
 
 #### ACCESS THE PATH TO SAVE THE CONVERTED VALUES ####
 make_output_folder <- function(file_path_reactive) {
