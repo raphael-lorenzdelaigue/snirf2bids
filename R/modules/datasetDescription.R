@@ -47,7 +47,12 @@ datasetDescription_server <- function(id, converted_root) {
       # Build the metadata list step by step
       # In order to make sure that no empty fields are included (cleaner)
       if (nzchar(input$Name)) dataset_description$Name <- input$Name
-      if (nzchar(input$Authors)) dataset_description$Authors <- input$Authors
+      if (nzchar(input$Authors)) {
+        authors <- strsplit(input$Authors, split = "[,\n]")[[1]]  # split by comma or newline
+        authors <- trimws(authors)  # remove leading/trailing spaces
+        authors <- authors[authors != ""]  # remove empty entries
+        dataset_description$Authors <- authors
+      }
       if (nzchar(input$ReferencesAndLinks)) dataset_description$ReferencesAndLinks <- input$ReferencesAndLinks
       if (nzchar(input$datasetDOI)) dataset_description$datasetDOI <- input$datasetDOI
       dataset_description$BIDSVersion <- "1.4.0"  # always included
