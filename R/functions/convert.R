@@ -81,14 +81,35 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description, ro
       write_raw_bids(raw, bids_path, overwrite=T)
   }
 
-  # If manufacturer is not NIRx, read subject ID from parent folder
+  # In "folders" routine, extract subject ID, session number and task name from folder structure
   else if (routine == "folders"){
+
+    # Split path into components
+    path_parts <- strsplit(normalizePath(source_snirf), "[/\\\\]")[[1]]
+
+    cat("DEBUG - path_parts:\n")
+    print(path_parts)
+    cat("DEBUG - length:", length(path_parts), "\n")
+
+    if (length(path_parts) < 4) {
+      stop("Path is too short to extract subject/session/task structure")
+    }
+
+    # Extract last elements relative to file
+    task    <- path_parts[length(path_parts) - 1]
+    session <- path_parts[length(path_parts) - 2]
+    subject <- path_parts[length(path_parts) - 3]
+
     file_tags <- data.frame(
-      subject = basename(dirname(source_snirf)), # Subject ID read from subdirectory
-      task = "task",
-      session = "01"
+      subject = subject,
+      session = session,
+      task    = task
     )
-    bids_path <- BIDSPath(subject = file_tags$subject, session = file_tags$session, task = file_tags$task, root = converted_root)
+    bids_path <- BIDSPath(
+      subject = file_tags$subject,
+      session = file_tags$session,
+      task = file_tags$task,
+      root = converted_root)
     raw = mne$io$read_raw_snirf(source_snirf, preload = FALSE)
     write_raw_bids(raw, bids_path, overwrite=T)
   }
