@@ -1,4 +1,5 @@
-instructions <- readLines("R/Readme_instructions.md")
+file_path <- system.file("Readme_instructions.md", package = "SNIRF2BIDS")
+instructions <- readLines(file_path)
 instructions <- paste(instructions, collapse = "\n")
 
 #' Helper function to open readme ui
