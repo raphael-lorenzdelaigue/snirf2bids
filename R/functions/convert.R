@@ -43,13 +43,13 @@ make_output_folder <- function(file_path_reactive) {
 # And automatically confers the task name "task_01" and session "01"
 snirf2bids <- function (source_snirf, converted_root, experiment_description, routine) {
   # Read ID and manufacturer from inside the SNIRF
-  rhdf5_manufacturer <- h5read(source_snirf, "/nirs/metaDataTags/ManufacturerName")
-  task_map <- read.csv(experiment_description, colClasses = c("session" = "character"))
+  # rhdf5_manufacturer <- h5read(source_snirf, "/nirs/metaDataTags/ManufacturerName")
 
   # If ID is not specified & manufacturer is NirX, check if there is a description.json
   # From that file, read subject ID, infer task name and session number from task mapping
   # And use that info for conversion to BIDS
   if (routine == "json") {
+    task_map <- read.csv(experiment_description, colClasses = c("session" = "character"))
     json_path <- check_description_json(source_snirf) # Use NIRx vendor hook
       # Read the JSON content
       json_content <- fromJSON(json_path)
