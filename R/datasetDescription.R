@@ -34,6 +34,20 @@ datasetDescription_ui <- function(id) {
   )
 }
 
+#' Dataset Description Shiny Module Server
+#'
+#' This Shiny module server handles the dataset description inputs from the user
+#' and saves a BIDS-compliant `dataset_description.json` file.
+#'
+#' @param id Character. Shiny module namespace ID.
+#' @param converted_root Reactive. The path to the folder where the BIDS dataset will be saved.
+#'
+#' @return A list containing:
+#'   \describe{
+#'     \item{dataset_name}{Reactive expression returning the dataset name input by the user.}
+#'   }
+#' @export
+
 datasetDescription_server <- function(id, converted_root) {
   moduleServer(id, function(input, output, session) {
 
