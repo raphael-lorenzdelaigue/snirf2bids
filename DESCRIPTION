@@ -7,7 +7,7 @@ Authors@R:
     person("Philipp", "Schroeder", , "raphael.lorenz@uni-tuebingen.de", role = c("aut", "cre"))
 Description: This package contains the snirf2bids function, a GUI that can be used to convert raw fNIRS recordings in snirf-format to a BIDS-compliant dataset.
 Depends: R (>= 3.4.1)
-Import: shiny, bslib, here, tidyr, bslib, here, DT, stringr, purrr, dplyr, BiocManager, datamods
+Import: shiny, reticulate, bslib, here, tidyr, bslib, here, DT, stringr, purrr, dplyr, BiocManager, datamods
 License: use_gpl3_license()
 Encoding: UTF-8
 RoxygenNote: 7.3.3

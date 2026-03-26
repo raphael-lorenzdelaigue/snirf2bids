@@ -1,5 +1,5 @@
 # auto-install needed packages
-my_packages <- c("shiny", "bslib", "here", "tidyr", "bslib", "here", "DT", "stringr", "purrr", "dplyr", "BiocManager", "datamods")  # Add your packages here
+my_packages <- c("reticulate","shiny", "bslib", "here", "tidyr", "bslib", "here", "DT", "stringr", "purrr", "dplyr", "BiocManager", "datamods")  # Add your packages here
 
 new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)) install.packages(new_packages)
