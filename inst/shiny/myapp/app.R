@@ -1,7 +1,5 @@
 # auto-install needed packages
-my_packages <- c("reticulate", "shiny", "bslib", "here", "tidyr", "bslib", "here", "DT", "stringr", "purrr", "dplyr", "BiocManager", "datamods", "shinyjs")  # Add your packages here
-
-
+my_packages <- c("reticulate", "shiny", "here", "tidyr", "bslib", "DT", "stringr", "purrr", "dplyr", "BiocManager", "datamods", "shinyjs")  # Add your packages here
 
 new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)) install.packages(new_packages)
@@ -145,6 +143,8 @@ server <- function(input, output, session) {
     }
 
     tryCatch({
+      activate_mne_env()
+
       convert_root(
         source_root = currentSourcePath(),
         converted_root = currentConvertedPath(),
