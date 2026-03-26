@@ -1,5 +1,5 @@
 # auto-install needed packages
-my_packages <- c("reticulate", "shiny", "here", "tidyr", "bslib", "DT", "stringr", "purrr", "dplyr", "BiocManager", "datamods", "shinyjs")  # Add your packages here
+my_packages <- c("reticulate", "shiny", "here", "tidyr", "bslib", "DT", "stringr", "purrr", "dplyr", "BiocManager", "datamods", "shinyjs", "magrittr")  # Add your packages here
 
 new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)) install.packages(new_packages)
@@ -7,7 +7,6 @@ if(length(new_packages)) install.packages(new_packages)
 if (!require("rhdf5"))
   BiocManager::install("rhdf5")
 
-library(NIRS2BIDS)
 library(reticulate)
 library(rhdf5)
 library(jsonlite)
@@ -17,6 +16,7 @@ library(shinyFiles)
 library(jsonlite)
 library(bslib)
 library(shinyjs)
+library(magrittr)
 
 # Provide internally:
 # BIDS Version (in datasetDescription.R)
