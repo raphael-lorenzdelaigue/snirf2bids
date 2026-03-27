@@ -3,6 +3,7 @@
 export(Readme_server)
 export(Readme_ui)
 export(activate_mne_env)
+export(convert_root)
 export(datasetDescription_server)
 export(datasetDescription_ui)
 export(experimentalDesign_server)
