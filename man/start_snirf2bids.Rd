@@ -4,7 +4,7 @@
 \alias{start_snirf2bids}
 \title{start snirf2bids GUI}
 \usage{
-start_snirf2bids(x, ...)
+start_snirf2bids()
 }
 \value{
 A Shiny app object (runs interactively).

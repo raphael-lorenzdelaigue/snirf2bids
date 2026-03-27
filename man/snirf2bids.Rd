@@ -4,10 +4,16 @@
 \alias{snirf2bids}
 \title{snirf2bids function for conversion}
 \usage{
-snirf2bids(source_snirf, converted_root, experiment_description)
+snirf2bids(source_snirf, converted_root, experiment_description, routine)
 }
 \arguments{
-\item{experiment}{description}
+\item{source_snirf}{SNIRF to be converted}
+
+\item{converted_root}{Folder containing all SNIRFs to be converted}
+
+\item{experiment_description}{Subject, session and task metadata - only for "json" routine}
+
+\item{routine}{Switch between "json" and "folder"}
 }
 \description{
 snirf2bids function for conversion
