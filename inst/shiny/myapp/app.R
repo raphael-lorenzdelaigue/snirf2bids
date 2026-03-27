@@ -161,4 +161,13 @@ server <- function(input, output, session) {
   })
 }
 
+.onLoad <- function(libname, pkgname) {
+  if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager", repos = "https://packagemanager.posit.co/cran/2026-03-01/")
+  }
+  if (!requireNamespace("rhdf5", quietly = TRUE)) {
+    BiocManager::install("rhdf5", ask = FALSE)
+  }
+}
+
 shinyApp(ui, server)
