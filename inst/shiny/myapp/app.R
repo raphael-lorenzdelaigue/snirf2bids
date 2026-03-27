@@ -7,6 +7,7 @@ if(length(new_packages)) install.packages(new_packages)
 if (!require("rhdf5"))
   BiocManager::install("rhdf5")
 
+# Load R libraries
 library(reticulate)
 library(rhdf5)
 library(jsonlite)
@@ -17,6 +18,9 @@ library(jsonlite)
 library(bslib)
 library(shinyjs)
 library(magrittr)
+
+# Activate MNE environment
+env = activate_mne_env()
 
 # Provide internally:
 # BIDS Version (in datasetDescription.R)
@@ -147,7 +151,8 @@ server <- function(input, output, session) {
         source_root = currentSourcePath(),
         converted_root = currentConvertedPath(),
         experiment_description = exp_desc,
-        routine = input$mapping_source# or reactive, if you like
+        routine = input$mapping_source,
+        py_env = env# or reactive, if you like
       )
       showNotification("✅ Conversion complete!", type = "message")
     },

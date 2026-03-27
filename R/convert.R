@@ -18,10 +18,23 @@ vendor_hooks_path <- normalizePath(vendor_hooks_path, winslash = "/", mustWork =
 #' Sets up or activates the required conda environment for MNE.
 #' @export
 activate_mne_env <- function () {
+  # Step 0: Ensure unattended install
+  Sys.setenv(CONDA_ALWAYS_YES = "true")
+
   # Step 1: Ensure Miniconda exists
   if (reticulate::miniconda_path() == "" || !file.exists(reticulate::miniconda_path())) {
     message("Installing Miniconda...")
     reticulate::install_miniconda()
+
+    # Accept ToS automatically
+    #conda_bin <- file.path(reticulate::miniconda_path(), "condabin", "conda.bat")
+    #for (ch in c("https://repo.anaconda.com/pkgs/main",
+                 #"https://repo.anaconda.com/pkgs/r",
+                 #"https://repo.anaconda.com/pkgs/msys2")) {
+      #system2(conda_bin, c("tos", "accept", "--override-channels", "--channel", ch),
+              #stdout = TRUE, stderr = TRUE, wait = TRUE)
+    #}
+
   }
 
   # Step 2: Now it's safe to query conda
@@ -81,11 +94,13 @@ make_output_folder <- function(file_path_reactive) {
 #' snirf2bids function for conversion
 #'
 #' @param source_snirf SNIRF to be converted
-#' @param converted_root Folder containing all SNIRFs to be converted
+#' @param converted_root Output folder for converted SNIRFs
 #' @param experiment_description Subject, session and task metadata - only for "json" routine
 #' @param routine Switch between "json" and "folder"
+#' @param py_env List. Python environment returned by activate_mne_env()
 #' @export
-snirf2bids <- function (source_snirf, converted_root, experiment_description, routine) {
+snirf2bids <- function (source_snirf, converted_root, experiment_description = NULL, routine = c("json", "folders"), py_env) {
+  routine <- match.arg(routine)
   if (routine == "json") {
     task_map <- read.csv(experiment_description, colClasses = c("session" = "character"))
     json_path <- check_description_json(source_snirf) # Use NIRx vendor hook
@@ -103,7 +118,13 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description, ro
         # Read task and session from the experiment overview
         file_tags$task <- task_map$task[task_map$name == file_tags$experiment]
         file_tags$session <- task_map$session[task_map$name == file_tags$experiment]
-        bids_path <- BIDSPath(subject = file_tags$subject, session = file_tags$session, task = file_tags$task, root = converted_root)
+
+        bids_path <- py_env$BIDSPath(
+          subject = file_tags$subject,
+          session = file_tags$session,
+          task = file_tags$task,
+          root = converted_root
+        )
       }
 
       # ELSE create BIDS path inside "no_mapping" folder with session "999"
@@ -112,11 +133,18 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description, ro
         file_tags$session <- "999"
         no_mapping_path <- file.path(converted_root, "no_mapping")
         dir.create(no_mapping_path, recursive = TRUE, showWarnings = FALSE)
-        bids_path <- BIDSPath(subject = file_tags$subject, session = file_tags$session, task = file_tags$task, root = no_mapping_path)
+
+        bids_path <- py_env$BIDSPath(
+          subject = file_tags$subject,
+          session = file_tags$session,
+          task = file_tags$task,
+          root = no_mapping_path
+        )
+
       }
       # Load data with MNE and convert to BIDS format
-      raw = mne$io$read_raw_snirf(source_snirf, preload = FALSE)
-      write_raw_bids(raw, bids_path, overwrite=T)
+      raw <- py_env$mne$io$read_raw_snirf(source_snirf, preload = FALSE)
+      py_env$write_raw_bids(raw, bids_path, overwrite = TRUE)
   }
 
   # In "folders" routine, extract subject ID, session number and task name from folder structure
@@ -139,13 +167,16 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description, ro
       session = session,
       task    = task
     )
-    bids_path <- BIDSPath(
-      subject = file_tags$subject,
-      session = file_tags$session,
-      task = file_tags$task,
-      root = converted_root)
-    raw = mne$io$read_raw_snirf(source_snirf, preload = FALSE)
-    write_raw_bids(raw, bids_path, overwrite=T)
+
+    bids_path <- py_env$BIDSPath(
+      subject = subject,
+      session = session,
+      task = task,
+      root = converted_root
+    )
+
+    raw <- py_env$mne$io$read_raw_snirf(source_snirf, preload = FALSE)
+    py_env$write_raw_bids(raw, bids_path, overwrite = TRUE)
   }
 }
 
@@ -156,7 +187,19 @@ get_snirf_files <- function(folder) {
 }
 
 # Runs SNIRF2BIDS with lapply on data directory
-convert_root <- function (source_root, converted_root, experiment_description, routine) {
+#' snirf2bids function for conversion
+#'
+#' @param source_root Input folder for raw SNIRFs
+#' @param converted_root Output folder for converted SNIRFs
+#' @param experiment_description Subject, session and task metadata - only for "json" routine
+#' @param routine Switch between "json" and "folder"
+#' @param py_env List. Python environment returned by activate_mne_env()
+#' @export
+convert_root <- function(source_root, converted_root, experiment_description = NULL,
+                         routine = c("json", "folders"), py_env) {
+
+  routine <- match.arg(routine)
+
   # Initialize an empty data frame to store the results
   file_overview <- data.frame(subfolder = character(), stringsAsFactors = FALSE)
 
@@ -176,7 +219,13 @@ convert_root <- function (source_root, converted_root, experiment_description, r
         file_name <- tools::file_path_sans_ext(basename(snirf_path))
         cat("Processing:", file_name, "in", parent_folder, "\n")
 
-        snirf2bids(snirf_path, converted_root, experiment_description, routine)
+        snirf2bids(
+          source_snirf = snirf_path,
+          converted_root = converted_root,
+          experiment_description = experiment_description,
+          routine = routine,
+          py_env = py_env
+        )
       }
 
       }
