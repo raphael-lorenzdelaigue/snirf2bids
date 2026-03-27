@@ -1,4 +1,3 @@
-library(DT)
 
 #' Helper function for task mapping
 #' @param id takes app id

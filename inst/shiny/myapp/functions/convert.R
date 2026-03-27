@@ -1,8 +1,4 @@
 #### SETUP ####
-library(reticulate)
-#library(rhdf5)
-library(jsonlite)
-library(here)
 
 venv_path <- here("R", "install", "PyEnv")
 vendor_hooks_path <- here("R", "functions", "vendor_hooks.R")

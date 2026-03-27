@@ -1,35 +1,3 @@
-# auto-install needed packages
-my_packages <- c("reticulate", "shiny", "shinyFiles", "here", "tidyr", "bslib", "DT", "stringr", "purrr", "dplyr", "BiocManager", "datamods", "shinyjs", "magrittr")  # Add your packages here
-
-new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
-if(length(new_packages)) install.packages(new_packages)
-
-if (!require("BiocManager", quietly = T))
-  install.packages("BiocManager")
-
-#if (!require("rhdf5", quietly = T))
-#  BiocManager::install("rhdf5", configure.args="--no-staged-install")
-
-library(reticulate)
-#library(rhdf5)
-library(jsonlite)
-library(here)
-library(shiny)
-library(shinyFiles)
-library(bslib)
-library(shinyjs)
-library(magrittr)
-
-# Provide internally:
-# BIDS Version (in datasetDescription.R)
-# Load your modules
-#source("R/modules/experimentalDesign.R")
-#source("R/modules/datasetDescription.R")
-#source("R/modules/taskMapping.R")
-#source("R/modules/Readme.R")
-#source("R/modules/folderCheck.R")
-
-#source("R/functions/convert.R")
 
 ui <- navbarPage("SNIRF2BIDS Converter",
                  tabsetPanel(

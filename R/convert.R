@@ -1,9 +1,5 @@
 #### SETUP ####
-library(reticulate)
-#library(rhdf5)
-library(jsonlite)
 library(here)
-
 vendor_hooks_path <- here("R", "functions", "vendor_hooks.R")
 
 # Always normalize paths for Windows compatibility
