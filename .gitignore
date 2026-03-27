@@ -5,3 +5,9 @@
 **/converted/
 /install/Python39User/
 /testFiles/
+# Shiny/renv
+renv/library/          
+renv/staging/
+renv/cache/
+!renv.lock            # ✅ needs to be tracked
+!.Rprofile            # ✅ automated renv lock
