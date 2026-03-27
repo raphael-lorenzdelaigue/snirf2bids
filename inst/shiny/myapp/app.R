@@ -143,8 +143,6 @@ server <- function(input, output, session) {
     }
 
     tryCatch({
-      activate_mne_env()
-
       convert_root(
         source_root = currentSourcePath(),
         converted_root = currentConvertedPath(),
