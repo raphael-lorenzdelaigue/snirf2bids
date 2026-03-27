@@ -1,12 +1,23 @@
-file_path <- system.file("Readme_instructions.md", package = "SNIRF2BIDS")
-instructions <- readLines(file_path)
-instructions <- paste(instructions, collapse = "\n")
+#file_path <- system.file("Readme_instructions.md", package = "SNIRF2BIDS")
+#instructions <- readLines(file_path)
+#instructions <- paste(instructions, collapse = "\n")
+
 
 #' Helper function to open readme ui
 #' @param id takes app id
 #' @export
 Readme_ui <- function(id) {
   ns <- NS(id)
+
+  # Read instructions here
+  # Correctly locate instructions inside installed package
+  instructions_path <- system.file("extdata", "Readme_instructions.md", package = "SNIRF2BIDS")
+  instructions <- if (file.exists(instructions_path)) {
+    readLines(instructions_path) %>% paste(collapse = "\n")
+  } else {
+    "Instructions file not found."
+  }
+
   page_fillable(
     card(
       style = "background-color: #f8f9fa;",
@@ -23,7 +34,7 @@ Readme_ui <- function(id) {
       div(
         style = "height: 100%; flex-grow: 1; display: flex; flex-direction: column;", # Concerns div element
         textAreaInput(
-          ns("ReadmeEditor"),
+          inputId = ns("ReadmeEditor"),
           label = NULL,
           value = instructions,
           width = "100%",
