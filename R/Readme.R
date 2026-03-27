@@ -43,6 +43,11 @@ Readme_ui <- function(id) {
   )
 }
 
+#' Readme Shiny Module Server
+#'
+#' @param id Character. Shiny module namespace ID.
+#' @param converted_root Reactive. The path to the folder where the BIDS dataset will be saved.
+#' @export
 Readme_server <- function(id, converted_root) {
   moduleServer(id, function(input, output, session) {
     observeEvent(input$save_Readme, {
