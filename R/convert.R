@@ -44,8 +44,6 @@ activate_mne_env <- function () {
   write_raw_bids <- mnebids$write_raw_bids
 }
 
-source(vendor_hooks_path)
-
 #### ACCESS THE PATH TO SAVE THE CONVERTED VALUES ####
 make_output_folder <- function(file_path_reactive) {
   reactive({
@@ -66,10 +64,10 @@ make_output_folder <- function(file_path_reactive) {
 
 #' snirf2bids function for conversion
 #'
-#' @param source_snirf
-#' @param converted_root
-#' @param experiment_description
-#' @param routine
+#' @param source_snirf SNIRF to be converted
+#' @param converted_root Folder containing all SNIRFs to be converted
+#' @param experiment_description Subject, session and task metadata - only for "json" routine
+#' @param routine Switch between "json" and "folder"
 #' @export
 snirf2bids <- function (source_snirf, converted_root, experiment_description, routine) {
   if (routine == "json") {
