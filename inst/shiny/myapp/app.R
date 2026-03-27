@@ -7,8 +7,15 @@ if(length(new_packages)) install.packages(new_packages)
 if (!require("BiocManager", quietly = T))
   install.packages("BiocManager")
 
-if (!require("rhdf5", quietly = T))
-  BiocManager::install("rhdf5", configure.args="--no-staged-install")
+#' rhdf5 function to configure / install rhdf5
+#'
+#' @export
+rhdfconfig <- function(){
+  if (!require("rhdf5", quietly = T))
+    BiocManager::install("rhdf5", configure.args="--no-staged-install")
+}
+
+call_rhdf <- rhdfconfig()
 
 library(reticulate)
 library(rhdf5)
