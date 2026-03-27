@@ -4,7 +4,10 @@ my_packages <- c("reticulate", "shiny", "here", "tidyr", "bslib", "DT", "stringr
 new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)) install.packages(new_packages)
 
-if (!require("rhdf5"))
+if (!require("BiocManager", quietly = T))
+  install.packages("BiocManager")
+
+if (!require("rhdf5", quietly = T))
   BiocManager::install("rhdf5", configure.args="--no-staged-install")
 
 library(reticulate)
