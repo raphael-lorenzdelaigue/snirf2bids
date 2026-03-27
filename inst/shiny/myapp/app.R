@@ -7,8 +7,8 @@ if(length(new_packages)) install.packages(new_packages)
 if (!require("BiocManager", quietly = T))
   install.packages("BiocManager")
 
-if (!require("rhdf5", quietly = T))
-  BiocManager::install("rhdf5", configure.args="--no-staged-install")
+#if (!require("rhdf5", quietly = T))
+#  BiocManager::install("rhdf5", configure.args="--no-staged-install")
 
 library(reticulate)
 #library(rhdf5)
