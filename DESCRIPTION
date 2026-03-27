@@ -5,7 +5,7 @@ Authors@R:
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 Depends: R (>= 3.4.1)
-Import: renv, shiny, shinyFiles, bslib, here, tidyr, bslib, here, DT, stringr, purrr, dplyr, BiocManager, datamods
+Import: renv, shiny, shinyjs, shinyFiles, bslib, here, tidyr, bslib, here, DT, stringr, purrr, dplyr, BiocManager, datamods
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
