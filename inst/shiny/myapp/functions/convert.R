@@ -1,6 +1,9 @@
 #### SETUP ####
 call_rhdf <- rhdfconfig()
 
+if (!require("rhdf5", quietly = T))
+  BiocManager::install("rhdf5", configure.args="--no-staged-install")
+
 library(reticulate)
 library(rhdf5)
 library(jsonlite)
