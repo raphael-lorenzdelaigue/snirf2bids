@@ -2,12 +2,15 @@ Package: SNIRF2BIDS
 Title: Converts SNIRF Files to BIDS-Compliant Datasets
 Version: 0.0.0.9000
 Authors@R: 
-    person("Raphael", "Lorenz-de Laigue", , "raphael.lorenz@uni-tuebingen.de", role = c("aut", "cre"))
+    person("Raphael", "Lorenz-de Laigue", , "raphael.lorenz-de-laigue@uni-tuebingen.de", role = c("aut", "cre"))
     person("Jennifer", "Svaldi", , "jennifer.svaldi@uni-tuebingen.de", role = c("aut", "cre"))
-    person("Philipp", "Schroeder", , "raphael.lorenz@uni-tuebingen.de", role = c("aut", "cre"))
-Description: This package contains the snirf2bids function, a GUI that can be used to convert raw fNIRS recordings in snirf-format to a BIDS-compliant dataset.
+    person("Philipp", "Schroeder", , "philipp.schroeder@uni-tuebingen.de", role = c("aut", "cre"))
+Description: Provides a graphical user interface (GUI) to convert raw functional near-infrared spectroscopy (fNIRS) recordings in SNIRF format into BIDS-compliant datasets. 
+The package interfaces with the Python-based MNE-BIDS library via 'reticulate', using the write_raw_bids function for data conversion. 
+On first use, a dedicated Miniconda environment is automatically installed and configured with all required dependencies (e.g., 'mne', 'mne-bids'), ensuring a reproducible and self-contained workflow. 
+The environment is installed once, if not already detected locally, and reused in subsequent sessions.
 Depends: R (>= 3.4.1)
-Import: shiny, reticulate, bslib, here, tidyr, bslib, here, DT, stringr, purrr, dplyr, BiocManager, datamods
+Import: shiny, reticulate, bslib, here, tidyr, bslib, here, DT, stringr, purrr, dplyr, BiocManager, datamods, shinyjs, magrittr
 License: use_gpl3_license()
 Encoding: UTF-8
 RoxygenNote: 7.3.3
