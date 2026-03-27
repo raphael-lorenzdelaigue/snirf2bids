@@ -5,10 +5,10 @@ new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])
 if(length(new_packages)) install.packages(new_packages)
 
 if (!require("rhdf5"))
-  BiocManager::install("rhdf5")
+  BiocManager::install("rhdf5", configure.args="--no-staged-install")
 
 library(reticulate)
-#library(rhdf5)
+library(rhdf5)
 library(jsonlite)
 library(here)
 library(shiny)

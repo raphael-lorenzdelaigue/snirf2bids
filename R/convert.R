@@ -4,10 +4,10 @@ library(rhdf5)
 library(jsonlite)
 library(here)
 
-#vendor_hooks_path <- here("R", "functions", "vendor_hooks.R")
+vendor_hooks_path <- here("R", "functions", "vendor_hooks.R")
 
 # Always normalize paths for Windows compatibility
-#vendor_hooks_path <- normalizePath(vendor_hooks_path, winslash = "/", mustWork = FALSE)
+vendor_hooks_path <- normalizePath(vendor_hooks_path, winslash = "/", mustWork = FALSE)
 # old version (use local venv)
 #reticulate::use_virtualenv(venv_path, required = TRUE)
 # connect previously created python environment + packages

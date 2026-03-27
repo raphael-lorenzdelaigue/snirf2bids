@@ -1,6 +1,6 @@
-file_path <- system.file("Readme_instructions.md", package = "SNIRF2BIDS")
-instructions <- readLines(file_path)
-instructions <- paste(instructions, collapse = "\n")
+#file_path <- system.file("extdata/Readme_instructions.md", package = "SNIRF2BIDS")
+#instructions <- cat(readLines("extdata/Readme_instructions.md"), sep="\n")
+#instructions <- paste(instructions, collapse = "\n")
 
 #' Helper function to open readme ui
 #' @param id takes app id
@@ -49,6 +49,7 @@ Readme_ui <- function(id) {
 #' @param converted_root Reactive. The path to the folder where the BIDS dataset will be saved.
 #' @export
 Readme_server <- function(id, converted_root) {
+  instructions <- readLines("extdata/Readme_instructions.md")
   moduleServer(id, function(input, output, session) {
     observeEvent(input$save_Readme, {
       req(converted_root())
