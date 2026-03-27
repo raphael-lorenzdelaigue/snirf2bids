@@ -26,9 +26,10 @@ activate_mne_env <- function () {
     message("Installing Miniconda...")
     reticulate::install_miniconda()
 
-    # Accept ToS automatically
-    #conda_bin <- file.path(reticulate::miniconda_path(), "condabin", "conda.bat")
-    #for (ch in c("https://repo.anaconda.com/pkgs/main",
+    # Alternative code to accept ToS automatically
+    # (Can be run in command line, currently not executed automatically)
+    # conda_bin <- file.path(reticulate::miniconda_path(), "condabin", "conda.bat")
+    # for (ch in c("https://repo.anaconda.com/pkgs/main",
                  #"https://repo.anaconda.com/pkgs/r",
                  #"https://repo.anaconda.com/pkgs/msys2")) {
       #system2(conda_bin, c("tos", "accept", "--override-channels", "--channel", ch),
