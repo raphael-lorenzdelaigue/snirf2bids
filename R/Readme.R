@@ -7,6 +7,7 @@
 #' @export
 Readme_ui <- function(id) {
   ns <- NS(id)
+  instructions <- readLines(system.file("extdata/Readme_instructions.md"))
   page_fillable(
     card(
       style = "background-color: #f8f9fa;",
@@ -49,7 +50,6 @@ Readme_ui <- function(id) {
 #' @param converted_root Reactive. The path to the folder where the BIDS dataset will be saved.
 #' @export
 Readme_server <- function(id, converted_root) {
-  instructions <- readLines("extdata/Readme_instructions.md")
   moduleServer(id, function(input, output, session) {
     observeEvent(input$save_Readme, {
       req(converted_root())
