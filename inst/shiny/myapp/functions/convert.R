@@ -1,4 +1,6 @@
 #### SETUP ####
+call_rhdf <- rhdfconfig()
+
 library(reticulate)
 library(rhdf5)
 library(jsonlite)
