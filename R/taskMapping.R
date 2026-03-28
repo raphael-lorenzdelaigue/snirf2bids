@@ -41,6 +41,9 @@ taskMapping_server <- function(id, dataset_name_reactive, routine) {
       # Only run if "json" routine is selected
       if (routine() != "json") return()
 
+      # Only run when the taskMapping tab is selected
+      req(input$current_tab == "task_mapping")  # <-- NEW
+
       file_path <- file.path(here(), "R", "experiments", paste0(dataset_name_reactive(), "_tasks.csv"))
 
       if (file.exists(file_path)) {
