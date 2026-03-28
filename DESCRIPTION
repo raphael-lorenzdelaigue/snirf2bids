@@ -6,11 +6,11 @@ Authors@R:
     person("Jennifer", "Svaldi", , "jennifer.svaldi@uni-tuebingen.de", role = c("aut", "cre"))
     person("Philipp", "Schroeder", , "philipp.schroeder@uni-tuebingen.de", role = c("aut", "cre"))
 Description: Provides a graphical user interface (GUI) to convert raw functional near-infrared spectroscopy (fNIRS) recordings in SNIRF format into BIDS-compliant datasets. 
-The package interfaces with the Python-based MNE-BIDS library via 'reticulate', using the write_raw_bids function for data conversion. 
-On first use, a dedicated Miniconda environment is automatically installed and configured with all required dependencies (e.g., 'mne', 'mne-bids'), ensuring a reproducible and self-contained workflow. 
-The environment is installed once, if not already detected locally, and reused in subsequent sessions.
+     The package interfaces with the Python-based MNE-BIDS library via 'reticulate', using the write_raw_bids function for data conversion. 
+     On first use, a dedicated Miniconda environment is automatically installed and configured with all required dependencies (e.g., 'mne', 'mne-bids'), ensuring a reproducible and self-contained workflow. 
+     The environment is installed once, if not already detected locally, and reused in subsequent sessions.
 Depends: R (>= 3.4.1)
-Import: shiny, reticulate, bslib, here, tidyr, bslib, here, DT, stringr, purrr, dplyr, BiocManager, datamods, shinyjs, magrittr
+Imports: shiny, shinyFiles, reticulate, bslib, here, tidyr, bslib, here, DT, stringr, purrr, dplyr, BiocManager, Rhdf5, datamods, shinyjs, magrittr
 License: use_gpl3_license()
 Encoding: UTF-8
 RoxygenNote: 7.3.3
