@@ -10,7 +10,7 @@ vendor_hooks_path <- here("R", "functions", "vendor_hooks.R")
 vendor_hooks_path <- normalizePath(vendor_hooks_path, winslash = "/", mustWork = FALSE)
 
 # old version (use local venv)
-#reticulate::use_virtualenv(venv_path, required = TRUE)
+# reticulate::use_virtualenv(venv_path, required = TRUE)
 # connect previously created python environment + packages
 
 #' Activate MNE Python environment
@@ -27,7 +27,7 @@ activate_mne_env <- function () {
     reticulate::install_miniconda()
 
     # Alternative code to accept ToS automatically
-    # (Can be run in command line, currently not executed automatically)
+    # (Can be run in command line, currently not running if executed within activate_mne_env)
     # conda_bin <- file.path(reticulate::miniconda_path(), "condabin", "conda.bat")
     # for (ch in c("https://repo.anaconda.com/pkgs/main",
                  #"https://repo.anaconda.com/pkgs/r",
