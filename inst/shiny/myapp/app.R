@@ -4,12 +4,6 @@ my_packages <- c("reticulate", "shiny", "here", "tidyr", "bslib", "DT", "stringr
 new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)) install.packages(new_packages)
 
-# Bioconductor
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-
-BiocManager::install("rhdf5")
-
 # Load R libraries
 library(reticulate)
 library(rhdf5)
