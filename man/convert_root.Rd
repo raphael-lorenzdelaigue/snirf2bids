@@ -4,7 +4,13 @@
 \alias{convert_root}
 \title{snirf2bids function for conversion}
 \usage{
-convert_root(source_root, converted_root, experiment_description, routine)
+convert_root(
+  source_root,
+  converted_root,
+  experiment_description = NULL,
+  routine = c("json", "folders"),
+  py_env
+)
 }
 \arguments{
 \item{source_root}{Input folder for raw SNIRFs}
@@ -14,6 +20,8 @@ convert_root(source_root, converted_root, experiment_description, routine)
 \item{experiment_description}{Subject, session and task metadata - only for "json" routine}
 
 \item{routine}{Switch between "json" and "folder"}
+
+\item{py_env}{List. Python environment returned by activate_mne_env()}
 }
 \description{
 snirf2bids function for conversion

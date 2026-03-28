@@ -4,7 +4,13 @@
 \alias{snirf2bids}
 \title{snirf2bids function for conversion}
 \usage{
-snirf2bids(source_snirf, converted_root, experiment_description, routine)
+snirf2bids(
+  source_snirf,
+  converted_root,
+  experiment_description = NULL,
+  routine = c("json", "folders"),
+  py_env
+)
 }
 \arguments{
 \item{source_snirf}{SNIRF to be converted}
@@ -14,6 +20,8 @@ snirf2bids(source_snirf, converted_root, experiment_description, routine)
 \item{experiment_description}{Subject, session and task metadata - only for "json" routine}
 
 \item{routine}{Switch between "json" and "folder"}
+
+\item{py_env}{List. Python environment returned by activate_mne_env()}
 }
 \description{
 snirf2bids function for conversion

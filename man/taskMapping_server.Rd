@@ -4,12 +4,14 @@
 \alias{taskMapping_server}
 \title{Helper function for task mapping server}
 \usage{
-taskMapping_server(id, dataset_name_reactive)
+taskMapping_server(id, dataset_name_reactive, routine)
 }
 \arguments{
 \item{id}{takes app id}
 
 \item{dataset_name_reactive}{takes dataset name}
+
+\item{routine}{either "json" or "folders"}
 }
 \description{
 Helper function for task mapping server
