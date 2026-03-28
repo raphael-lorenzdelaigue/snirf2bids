@@ -127,10 +127,27 @@ server <- function(input, output, session) {
   })
 
   #### Call modules, create necessary input and output variables ####
-  dataset_desc <- datasetDescription_server("page1", converted_root = currentConvertedPath)
-  experimental_design <- experimentalDesign_server("page2", currentConvertedPath, dataset_name_reactive = dataset_desc$dataset_name)
-  task_mapping <- taskMapping_server("page3",dataset_name_reactive = dataset_desc$dataset_name)
-  Readme_server("page4", converted_root = currentConvertedPath)
+  dataset_desc <- datasetDescription_server(
+    "page1",
+    converted_root = currentConvertedPath
+    )
+
+  experimental_design <- experimentalDesign_server(
+    "page2",
+    currentConvertedPath,
+    dataset_name_reactive = dataset_desc$dataset_name
+    )
+
+  task_mapping <- taskMapping_server(
+    "page3",
+    dataset_name_reactive = dataset_desc$dataset_name,
+    routine = reactive(input$mapping_source)
+    )
+
+  Readme_server(
+    "page4",
+    converted_root = currentConvertedPath
+    )
 
   #### Convert button (at the end) ####
   observeEvent(input$convert_button, {

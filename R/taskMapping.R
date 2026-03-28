@@ -23,8 +23,9 @@ taskMapping_ui <- function(id) {
 #' Helper function for task mapping server
 #' @param id takes app id
 #' @param dataset_name_reactive takes dataset name
+#' @param routine either "json" or "folders"
 #' @export
-taskMapping_server <- function(id, dataset_name_reactive) {
+taskMapping_server <- function(id, dataset_name_reactive, routine) {
   moduleServer(id, function(input, output, session) {
 
     # Reactive to hold loaded CSV
@@ -35,6 +36,11 @@ taskMapping_server <- function(id, dataset_name_reactive) {
 
     observe({
       req(dataset_name_reactive())
+      req(routine())  # Ensure the routine reactive is available
+
+      # Only run if "json" routine is selected
+      if (routine() != "json") return()
+
       file_path <- file.path(here(), "R", "experiments", paste0(dataset_name_reactive(), "_tasks.csv"))
 
       if (file.exists(file_path)) {
