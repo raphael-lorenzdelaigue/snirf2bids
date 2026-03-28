@@ -1,20 +1,26 @@
 # auto-install needed packages
-my_packages <- c("reticulate", "shiny", "here", "tidyr", "bslib", "DT", "stringr", "purrr", "dplyr", "datamods", "shinyjs", "magrittr")  # Add your packages here
+my_packages <- c("reticulate", "shiny", "shinyFiles", "here", "tidyr", "bslib", "DT", "stringr", "purrr", "dplyr", "datamods", "shinyjs", "magrittr", "jsonlite")  # Add your packages here
 
 new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)) install.packages(new_packages)
 
 # Load R libraries
 library(reticulate)
-library(rhdf5)
-library(jsonlite)
-library(here)
 library(shiny)
 library(shinyFiles)
-library(jsonlite)
+library(here)
+library(tidyr)
 library(bslib)
+library(DT)
+library(stringr)
+library(purrr)
+library(dplyr)
+library(datamods)
 library(shinyjs)
 library(magrittr)
+library(jsonlite)
+
+library(rhdf5)
 
 # Activate MNE environment
 env = activate_mne_env()
