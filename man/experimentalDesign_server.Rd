@@ -4,18 +4,14 @@
 \alias{experimentalDesign_server}
 \title{Helper function for experimentalDesign_server}
 \usage{
-experimentalDesign_server(
-  id,
-  currentConvertedPathReactive,
-  dataset_name_reactive
-)
+experimentalDesign_server(id, converted_root, dataset_name_reactive)
 }
 \arguments{
 \item{id}{takes app id}
 
-\item{currentConvertedPathReactive}{takes current path}
-
 \item{dataset_name_reactive}{takes dataset}
+
+\item{currentConvertedPathReactive}{takes current path}
 }
 \description{
 Helper function for experimentalDesign_server
