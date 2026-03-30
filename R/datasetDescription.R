@@ -24,8 +24,8 @@ datasetDescription_ui <- function(id) {
   ),
   card(
     card_header("OPTIONAL"),
-    textAreaInput(ns("Authors"), label = "List of individuals who contributed to the creation/curation of the dataset.", value = "", rows = 3, width = "100%"),
-    textAreaInput(ns("ReferencesAndLinks"), label = "List of references to publications that contain information on the dataset. A reference may be textual or a URI.", value = "", rows = 3, width = "100%"),
+    textAreaInput(ns("Authors"), label = "List of individuals who contributed to the creation/curation of the dataset. Please separate names by comma or new line.", value = "", rows = 3, width = "100%"),
+    textAreaInput(ns("ReferencesAndLinks"), label = "List of references to publications that contain information on the dataset. A reference may be textual or a URI. Please separate references by new line.", value = "", rows = 3, width = "100%"),
     textAreaInput(ns("datasetDOI"), label = "Digital Object Identifier of the dataset (not the corresponding paper). Should be expressed as a valid URI, not bare DOI. (the \"doi\" prefix should be included as in doi:10.18112/openneuro.ds000001.v1.0.0 instead of 10.18112/openneuro.ds000001.v1.0.0)", value = "", rows = 3, width = "100%")
   ),
   card(
