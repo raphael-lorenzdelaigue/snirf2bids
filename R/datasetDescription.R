@@ -26,7 +26,7 @@ datasetDescription_ui <- function(id) {
     card_header("OPTIONAL"),
     textAreaInput(ns("Authors"), label = "List of individuals who contributed to the creation/curation of the dataset.", value = "", rows = 3, width = "100%"),
     textAreaInput(ns("ReferencesAndLinks"), label = "List of references to publications that contain information on the dataset. A reference may be textual or a URI.", value = "", rows = 3, width = "100%"),
-    textAreaInput(ns("datasetDOI"), label = "Digital Object Identifier of the dataset (not the corresponding paper). Should be expressed as a valid URI, not bare DOI.", value = "", rows = 3, width = "100%")
+    textAreaInput(ns("datasetDOI"), label = "Digital Object Identifier of the dataset (not the corresponding paper). Should be expressed as a valid URI, not bare DOI. (the \"doi\" prefix should be included as in doi:10.18112/openneuro.ds000001.v1.0.0 instead of 10.18112/openneuro.ds000001.v1.0.0)", value = "", rows = 3, width = "100%")
   ),
   card(
     actionButton(ns("save_json"), "Save JSON")
@@ -70,7 +70,14 @@ datasetDescription_server <- function(id, converted_root) {
         authors <- authors[authors != ""]  # remove empty entries
         dataset_description$Authors <- authors
       }
-      if (nzchar(input$ReferencesAndLinks)) dataset_description$ReferencesAndLinks <- input$ReferencesAndLinks
+
+      if (nzchar(input$ReferencesAndLinks)) {
+        refs <- strsplit(input$ReferencesAndLinks, split = "\n")[[1]] # split by comma or newline
+        refs <- trimws(refs) # remove leading/trailing spaces
+        refs <- refs[refs != ""] # remove empty entries
+        dataset_description$ReferencesAndLinks <- refs
+      }
+
       if (nzchar(input$datasetDOI)) dataset_description$datasetDOI <- input$datasetDOI
       dataset_description$BIDSVersion <- "1.4.0"  # always included
 
