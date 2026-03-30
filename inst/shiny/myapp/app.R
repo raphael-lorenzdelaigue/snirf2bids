@@ -54,7 +54,15 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               br(),
                               "(2) the output folder where you want to save the BIDS-formatted files.",
                               br(),
-                              "Both folders must be located on a local hard drive as network drives might not be detected."
+                              "Both folders must be located on a local hard drive as network drives might not be detected.",
+                              br(),
+                              "Please also specify whether subject IDs, session numbers and task names should be inferred.",
+                              br(),
+                              "(a) from the input folder structure.",
+                              br(),
+                              "(b) from accompanying *_description.json files.",
+                              br(),
+                              "If (a), please make sure that all your recordings are stored in a hierarchical folder structure following the scheme subject-id > session-nr > task-name"
                             )
                           ),
                           card(radioButtons(
@@ -140,13 +148,13 @@ server <- function(input, output, session) {
 
   experimental_design <- experimentalDesign_server(
     "page2",
-    currentConvertedPath,
+    converted_root = currentConvertedPath,
     dataset_name_reactive = dataset_desc$dataset_name
     )
 
   task_mapping <- taskMapping_server(
     "page3",
-    dataset_name_reactive = dataset_desc$dataset_name,
+    converted_root = currentConvertedPath,
     routine = reactive(input$mapping_source)
     )
 
@@ -157,11 +165,15 @@ server <- function(input, output, session) {
 
   #### Convert button (at the end) ####
   observeEvent(input$convert_button, {
-    req(currentSourcePath(), currentConvertedPath())
+    req(currentSourcePath(), currentConvertedPath(), task_mapping$dataset_name_for_conversion())
     showNotification("Starting conversion...", type = "message")
 
     exp_desc <- if (input$mapping_source == "json") {
-      here("R","experiments", paste0(dataset_desc$dataset_name(), "_tasks_mapped.csv"))
+      file.path(
+        currentConvertedPath(),       # root converted folder
+        "experiments",                # experiments subfolder
+        paste0(task_mapping$dataset_name_for_conversion(), "_tasks_mapped.csv")
+      )
     } else {
       NULL
     }
@@ -174,6 +186,12 @@ server <- function(input, output, session) {
         routine = input$mapping_source,
         py_env = env# or reactive, if you like
       )
+
+      # ✅ Remove temporary experiments folder after successful conversion
+      exp_folder <- file.path(currentConvertedPath(), "experiments")
+      if (dir.exists(exp_folder)) {
+        unlink(exp_folder, recursive = TRUE, force = TRUE)
+      }
       showNotification("✅ Conversion complete!", type = "message")
     },
     error = function(e) {
