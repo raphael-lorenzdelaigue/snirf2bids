@@ -41,7 +41,7 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                  id = "current_tab",
                  shinyjs::useShinyjs(),
                    # In order to keep the destination path accessible to all pages of the app, I need to define corresponding UI and server in the main page
-                 tabPanel("Select Input Folder",
+                 tabPanel("Select input and output Folder - choose conversion routine",
                           card(
                             style = "background-color: #f8f9fa;",
                             div(
@@ -76,10 +76,10 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                           )),
                             shinyDirButton("select_InputDirectory", "Select input folder (original recordings)", "Please select input folder"), # Button for folder browser dialog
                             shinyDirButton("select_OutputDirectory", "Select output folder (BIDS-formatted recordings)", "Please select output folder")), # Button for folder browser dialog
-                 tabPanel("Modality agnostic files: Create dataset_description.json", datasetDescription_ui("page1")),
+                 tabPanel("Create dataset_description.json", datasetDescription_ui("page1")),
                  tabPanel("Specify experimental design", value = "experimental_design", experimentalDesign_ui("page2")),
                  tabPanel("Task mapping", value = "task_mapping", taskMapping_ui("page3")),
-                 tabPanel("Modality agnostic files: Create Readme.md", Readme_ui("page4")),
+                 tabPanel("Create Readme.md", Readme_ui("page4")),
                  tabPanel("Convert",
                           card(
                             style = "background-color: #f8f9fa;",
@@ -165,10 +165,11 @@ server <- function(input, output, session) {
 
   #### Convert button (at the end) ####
   observeEvent(input$convert_button, {
-    req(currentSourcePath(), currentConvertedPath(), task_mapping$dataset_name_for_conversion())
+    req(currentSourcePath(), currentConvertedPath())
     showNotification("Starting conversion...", type = "message")
 
     exp_desc <- if (input$mapping_source == "json") {
+      req(task_mapping$dataset_name_for_conversion())
       file.path(
         currentConvertedPath(),       # root converted folder
         "experiments",                # experiments subfolder
