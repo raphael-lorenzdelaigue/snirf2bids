@@ -94,7 +94,7 @@ experimentalDesign_ui <- function(id) {
 #' @param currentConvertedPathReactive takes current path
 #' @param dataset_name_reactive takes dataset
 #' @export
-experimentalDesign_server <- function(id, currentConvertedPathReactive, dataset_name_reactive) {
+experimentalDesign_server <- function(id, converted_root, dataset_name_reactive) {
   moduleServer(id, function(input, output, session) {
     # Update number of choices for NIRS sessions
     # ... if the value of input$total_sessions changes
@@ -134,8 +134,15 @@ experimentalDesign_server <- function(id, currentConvertedPathReactive, dataset_
       req(input$nirs_sessions)                     # at least one NIRS session
       req(input$total_sessions)                    # total sessions defined
 
+      req(converted_root())
+      req(dataset_name_reactive())
       # Define path for saving data
-      save_path <- file.path(here(), "R", "experiments", paste0(dataset_name_reactive(), "_tasks.csv"))
+      save_path <- file.path(
+        converted_root(),
+        "experiments",
+        paste0(dataset_name_reactive(), "_tasks.csv")
+      )
+
       if (!dir.exists(dirname(save_path))) {
         dir.create(dirname(save_path), recursive = TRUE)
       }
