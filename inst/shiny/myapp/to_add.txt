@@ -1,2 +1,0 @@
-Info fields
-datasetDescription > HowToAcknoledge: This field can also be used to define a publication that should be cited in publications that use the dataset.
