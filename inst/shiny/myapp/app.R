@@ -41,7 +41,7 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                  id = "current_tab",
                  shinyjs::useShinyjs(),
                    # In order to keep the destination path accessible to all pages of the app, I need to define corresponding UI and server in the main page
-                 tabPanel("Select input and output Folder - choose conversion routine",
+                 tabPanel("Select input and output folder - choose conversion routine",
                           card(
                             style = "background-color: #f8f9fa;",
                             div(
@@ -55,6 +55,7 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               "(2) the output folder where you want to save the BIDS-formatted files.",
                               br(),
                               "Both folders must be located on a local hard drive as network drives might not be detected.",
+                              br(),
                               br(),
                               "Please also specify whether subject IDs, session numbers and task names should be inferred.",
                               br(),

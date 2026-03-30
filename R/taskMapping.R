@@ -12,7 +12,7 @@ taskMapping_ui <- function(id) {
         style = "font-size: 1.05rem;",
         strong("Instruction:"),
         br(),
-        "Please now specify how the files are named in the input folder.",
+        "Please map each experiment entry in your description.json file to the corresponding session and task in your experimental design.",
       )
     ),
     card(
