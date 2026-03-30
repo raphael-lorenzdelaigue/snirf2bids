@@ -1,6 +1,6 @@
 Package: SNIRF2BIDS
 Title: Converts SNIRF Files to BIDS-Compliant Datasets
-Version: 0.0.0.9000
+Version: 1.0
 Authors@R: 
     person("Raphael", "Lorenz-de Laigue", , "raphael.lorenz-de-laigue@uni-tuebingen.de", role = c("aut", "cre"))
     person("Jennifer", "Svaldi", , "jennifer.svaldi@uni-tuebingen.de", role = c("aut", "cre"))
