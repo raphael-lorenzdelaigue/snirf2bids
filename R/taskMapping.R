@@ -12,14 +12,13 @@ taskMapping_ui <- function(id) {
         style = "font-size: 1.05rem;",
         strong("Instruction:"),
         br(),
-        "Please map each experiment entry in your description.json file to the corresponding session and task in your experimental design.",
+        "Please map each experiment entry from the \"*_description.json\" files in your input folder to the corresponding session and task in your experimental design.",
       )
     ),
     card(
       textInput(
         ns("dataset_name"),
-        label = "Dataset name:",
-        placeholder = "Enter the dataset name used in experiments folder"
+        label = "Dataset name:"
       )),
     card(datamods::edit_data_ui(ns("mapping"))),
     card(actionButton(ns("save_csv"), "Save updated CSV"))
