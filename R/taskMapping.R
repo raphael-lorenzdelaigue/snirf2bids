@@ -21,7 +21,7 @@ taskMapping_ui <- function(id) {
         label = "Dataset name:"
       )),
     card(datamods::edit_data_ui(ns("mapping"))),
-    card(actionButton(ns("save_csv"), "Save updated CSV"))
+    card(actionButton(ns("save_csv"), "Confirm task mapping"))
   )
 }
 
