@@ -201,37 +201,21 @@ convert_root <- function(source_root, converted_root, experiment_description = N
 
   routine <- match.arg(routine)
 
-  # Initialize an empty data frame to store the results
-  file_overview <- data.frame(subfolder = character(), stringsAsFactors = FALSE)
+  # Find all SNIRFs in the folder and subfolders
+  all_snirfs <- list.files(source_root, pattern = "\\.snirf$", recursive = TRUE, full.names = TRUE)
 
-  # Loop through folders...
-  folders <- list.dirs(source_root, recursive = FALSE)
-  for (folder in folders) {
-    subfolders <- list.dirs(folder, recursive = TRUE)
-
-    # And then recursively through subfolders
-    for (subfolder in subfolders) {
-
-    # Check if a SNIRF file is found
-      snirfs <- get_snirf_files(subfolder)
-
-      for (snirf_path in snirfs) {
-        parent_folder <- dirname(snirf_path)
-        file_name <- tools::file_path_sans_ext(basename(snirf_path))
-        cat("Processing:", file_name, "in", parent_folder, "\n")
-
-        snirf2bids(
-          source_snirf = snirf_path,
-          converted_root = converted_root,
-          experiment_description = experiment_description,
-          routine = routine,
-          py_env = py_env
-        )
-      }
-
-      }
-    }
+  # Process them one by one
+  for (snirf_path in all_snirfs) {
+    cat("Processing:", snirf_path, "\n")
+    snirf2bids(
+      source_snirf = snirf_path,
+      converted_root = converted_root,
+      experiment_description = experiment_description,
+      routine = routine,
+      py_env = py_env
+    )
   }
+}
 
 
 
