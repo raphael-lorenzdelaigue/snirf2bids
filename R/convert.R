@@ -181,6 +181,53 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description = N
   }
 }
 
+#### NO MAPPING OVERVIEW ####
+create_no_mapping_overview <- function(converted_root) {
+
+  no_mapping_dir <- file.path(converted_root, "no_mapping")
+
+  # Do nothing if the directory does not exist
+  if (!dir.exists(no_mapping_dir)) {
+    return(invisible(NULL))
+  }
+
+  # List all converted SNIRF files
+  files <- list.files(
+    path = no_mapping_dir,
+    pattern = "_nirs\\.snirf$",
+    recursive = TRUE,
+    full.names = TRUE
+  )
+
+  # If there is no such file, do nothing
+  if (length(files) == 0) {
+    return(invisible(NULL))
+  }
+
+  # Extract ID, task and filename
+  unmapped_df <- data.frame(
+    ID = stringr::str_extract(basename(files), "^sub-[^_]+"),
+    task = stringr::str_match(
+      basename(files),
+      "_task-([^_]+)"
+    )[, 2],
+    filename = basename(files),
+    stringsAsFactors = FALSE
+  )
+
+  # Only list each file once
+  unmapped_df <- unique(unmapped_df)
+
+  # Write to csv
+  write.csv(
+    unmapped_df,
+    file.path(no_mapping_dir, "unmapped_recordings.csv"),
+    row.names = FALSE
+  )
+
+  invisible(unmapped_df)
+}
+
 #### CONVERT ROUTINE (ONE FOLDER) ####
 # Helper function that finds all .snirf files in a specific folder
 get_snirf_files <- function(folder) {
@@ -215,7 +262,7 @@ convert_root <- function(source_root, converted_root, experiment_description = N
       py_env = py_env
     )
   }
-
+  create_no_mapping_overview(converted_root)
 }
 
 
