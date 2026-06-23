@@ -12,7 +12,7 @@ taskMapping_ui <- function(id) {
         style = "font-size: 1.05rem;",
         strong("Instruction:"),
         br(),
-        "Please map each experiment entry from the \"*_description.json\" files in your input folder to the corresponding session and task in your experimental design.",
+        "Please specify the BIDS-formatted session number and task name corresponding to each task name entered during recording. These values will be used in the converted output data.",
       )
     ),
     card(
@@ -72,7 +72,11 @@ taskMapping_server <- function(id, converted_root, routine) {
       id = "mapping",
       data = reactive({
         req(loaded_data())
-        loaded_data()
+        # Rename some column names for better UI
+        df <- loaded_data()
+        names(df)[names(df) == "name"] <- "Task name (raw data)"
+        names(df)[names(df) == "task"] <- "Task name (BIDS)"
+        df
       }),
       download_csv = FALSE,
       download_excel = FALSE,
@@ -83,13 +87,16 @@ taskMapping_server <- function(id, converted_root, routine) {
     observeEvent(input$save_csv, {
       req(mapping())
       req(converted_root())
+      df <- mapping()
+      names(df)[names(df) == "Task name (raw data)"] <- "name"
+      names(df)[names(df) == "Task name (BIDS)"] <- "task"
       save_path <- file.path(
         converted_root(),
         "experiments",
         paste0(input$dataset_name, "_tasks_mapped.csv")
       )
       if (!dir.exists(dirname(save_path))) dir.create(dirname(save_path), recursive = TRUE)
-      write.csv(mapping(), save_path, row.names = FALSE)
+      write.csv(df, save_path, row.names = FALSE)
       showNotification(paste("Saved to", save_path), type = "message")
     })
 
