@@ -167,7 +167,7 @@ server <- function(input, output, session) {
   #### Convert button (at the end) ####
   observeEvent(input$convert_button, {
     req(currentSourcePath(), currentConvertedPath())
-    showNotification("Starting conversion...", type = "message")
+    showNotification("Conversion is running...", type = "message")
 
     exp_desc <- if (input$mapping_source == "json") {
       req(task_mapping$dataset_name_for_conversion())
