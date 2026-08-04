@@ -42,6 +42,7 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                  shinyjs::useShinyjs(),
                    # In order to keep the destination path accessible to all pages of the app, I need to define corresponding UI and server in the main page
                  tabPanel("Select input and output folder - choose conversion routine",
+                          page_fluid(
                           card(
                             style = "background-color: #f8f9fa;",
                             div(
@@ -84,16 +85,24 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               strong("About the input and output folder"),
                               br(),
                               "The ",
-                              tags$code("input folder"),
-                              " does not need to be formatted according to BIDS standards. The ",
-                              tags$code("output folder"),
-                              "will be structured according to BIDS nomenclature at the end of the conversion process, if it is successful. BIDS follows a specific filesystem structure, where data is placed in a separate subdirectory for each study participant. This subfolder is named “sub-<label>”, where <label> stands for the unique identifier of a participant. If data was acquired across multiple sessions, a further subdirectory of type “ses-<label>” is created for each session. In that case, a unique <label> is assigned to each measurement session. After succesful conversion, the NIRS recording data will be saved within each of these subfolders. Besides the SNIRF file containing the recorded data, a range of metadata files will be created. These contain various informations such as a description of NIRS channels, task-related events or further technical aspects of the recording in the sidecar JSON. Only some of these files are required to comply with BIDS specifications. Others are either recommended or optional.",
+                              tags$code("input"),
+                              " folder does not need to be formatted according to BIDS standards. The ",
+                              tags$code("output"),
+                              "folder will be structured according to BIDS nomenclature at the end of the conversion process, if it is successful. BIDS follows a specific filesystem structure, where data is placed in a separate subdirectory for each study participant. This subfolder is named ",
+                              tags$code("sub-<label>"),
+                              "where ",
+                              tags$code("<label>"),
+                              "stands for the unique identifier of a participant. If data was acquired across multiple sessions, a further subdirectory of type ",
+                              tags$code("ses-<label>"),
+                              "is created for each session. In that case, a unique ",
+                              tags$code("<label>"),
+                              "is assigned to each measurement session. After succesful conversion, the NIRS recording data will be saved within each of these subfolders. Besides the SNIRF file containing the recorded data, a range of metadata files will be created. These contain various informations such as a description of NIRS channels, task-related events or further technical aspects of the recording in the sidecar JSON. Only some of these files are required to comply with BIDS specifications. Others are either recommended or optional.",
                               br(),
                               icon("book"),
                               " ",
                               tags$a(
                                 href = "https://bids-specification.readthedocs.io/en/stable/common-principles.html#filesystem-structure",
-                                "Further information on the BIDS filesystem structure: ",
+                                "BIDS documentation: filesystem structure: ",
                                 target = "_blank",
                                 style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
                               ),
@@ -102,15 +111,17 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               " ",
                               tags$a(
                                 href = "https://bids-specification.readthedocs.io/en/stable/modality-specific-files/near-infrared-spectroscopy.html#nirs-recording-data",
-                                "Further information on NIRS-specific files in the BIDS nomenclature: ",
+                                "BIDS documentation: NIRS-specific files",
                                 target = "_blank",
                                 style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
-                              )), # Button for folder browser dialog
+                              )))
+                          )), # Button for folder browser dialog
                  tabPanel("Create dataset_description.json", datasetDescription_ui("page1")),
                  tabPanel("Specify experimental design", value = "experimental_design", experimentalDesign_ui("page2")),
                  tabPanel("Task mapping", value = "task_mapping", taskMapping_ui("page3")),
                  tabPanel("Create Readme.md", Readme_ui("page4")),
                  tabPanel("Convert",
+                          page_fluid(
                           card(
                             style = "background-color: #f8f9fa;",
                             div(
@@ -131,29 +142,29 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               style = "font-size: 1.05rem;",
                               strong("About conversion"),
                               br(),
-                              "After conversion, your recordings and the extracted metadata will be organized in a BIDS-compliant folder structure. A separate subfolder will be created for each participant (",
-                              tags$code("sub-<label>"),
-                              ") and measurement session (",
-                              tags$code("ses-<label>"),
-                              "). The task name will also be included in the filenames as ",
+                              "After conversion, your recordings and the extracted metadata will be organized in a BIDS-compliant folder structure. A separate subfolder will be created for each participant",
+                              tags$code("(sub-<label>)"),
+                              "and measurement session",
+                              tags$code("(ses-<label>)"),
+                              ". The task name will also be included in the filenames as",
                               tags$code("task-<label>"),
                               ".",
-                              br(), br(),
+                              br(),
                               "We recommend validating the converted dataset using the ",
                               tags$code("BIDS Validator"),
                               ", which checks whether the dataset complies with the BIDS specification and reports any errors or warnings.",
-                              br(), br(),
+                              br(),
                               icon("book"),
                               " ",
                               tags$a(
-                                href = "https://bids-standard.github.io/bids-validator/",
                                 "BIDS Validator documentation",
+                                href = "https://bids-standard.github.io/bids-validator/",
                                 target = "_blank",
                                 style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
                               )
                             )
-                          ))
-))))
+                          )))
+))
 
 
 server <- function(input, output, session) {

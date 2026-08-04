@@ -28,15 +28,15 @@ taskMapping_ui <- function(id) {
         style = "font-size: 1.05rem;",
         strong("About task mapping"),
         br(),
-        "In the first two columns (",
+        "In the first two columns",
         tags$code("session"),
         " and ",
         tags$code("task name (BIDS)"),
-        "), you will find the session numbers and task names defined in the previous step. These values will be used in the BIDS-formatted output dataset.",
-        br(), br(),
-        "In the third column (",
+        ", you will find the session numbers and task names defined in the previous step. These values will be used in the BIDS-formatted output dataset.",
+        br(),
+        "In the third column",
         tags$code("task name (raw data)"),
-        "), please enter the corresponding task name used during data acquisition, as found in your raw data. Unlike the BIDS task name, this entry may not follow BIDS conventions and may, for example, combine the session number and task name into a single identifier."
+        ", please enter the corresponding task name used during data acquisition, as found in your raw data. Unlike the BIDS task name, this entry may not follow BIDS conventions and may, for example, combine the session number and task name into a single identifier."
       )
     )
   )

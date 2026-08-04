@@ -54,17 +54,31 @@ Readme_ui <- function(id) {
       style = "background-color: #eef7fb; padding: 12px",
       div(
         style = "font-size: 1.05rem;",
-        strong("About task mapping"),
+        strong("About Readme.MD"),
         br(),
-        "In the first two columns (",
-        tags$code("session"),
-        " and ",
-        tags$code("task name (BIDS)"),
-        "), you will find the session numbers and task names defined in the previous step. These values will be used in the BIDS-formatted output dataset.",
-        br(), br(),
-        "In the third column (",
-        tags$code("task name (raw data)"),
-        "), please enter the corresponding task name used during data acquisition, as found in your raw data. Unlike the BIDS task name, this entry may not follow BIDS conventions and may, for example, combine the session number and task name into a single identifier."
+        "The ",
+        tags$code("Readme.MD"),
+        " file contains a more detailed description of the dataset, including a description of the study design, recruitment process and measurement setup. Compared to the metadata files, the structure of ",
+        tags$code("Readme.MD"),
+        "is not predefined. However, BIDS does provide a template that we also include in SNIRF2BIDS.",
+        br(),
+        icon("book"),
+        " ",
+        tags$a(
+          href = "https://bids-specification.readthedocs.io/en/stable/modality-agnostic-files/dataset-description.html#readme",
+          "BIDS documentation: Readme.MD",
+          target = "_blank",
+          style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
+        ),
+        br(),
+        icon("book"),
+        " ",
+        tags$a(
+          href = "https://bids.neuroimaging.io/getting_started/templates/index.html#readmemd",
+          "Template: Readme.MD",
+          target = "_blank",
+          style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
+        )
       )
     )
 )
