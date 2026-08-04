@@ -134,8 +134,6 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               br(),
                               "You can now convert all detected SNIRF files from the input folder into BIDS format.",
                               br(),
-                              "After that step has ended, you will find your recordings, alongside extracted metadata, in the BIDS-compliant subfolder structure (one folder per participant (\"sub-xxx\"), and then one subfolder per session within that folder (\"ses-xxx\")).",
-                              br(),
                               "If retrieving metadata from the accompanying \"*_description.json\" files, SNIRF files that could not be mapped to your experimental structure will be placed in a separate folder called \"no_mapping\" with the session number \"999\"",
                             )
                           ),
