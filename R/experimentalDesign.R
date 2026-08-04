@@ -84,6 +84,28 @@ experimentalDesign_ui <- function(id) {
     ),
     card(
       actionButton(ns("confirmExperimentalDesign"), "Confirm experimental design")
+    ),
+    card(
+      style = "background-color: #eef7fb; padding: 12px",
+      div(
+        style = "font-size: 1.05rem;",
+        strong("About experimental design"),
+        br(),
+        "In the case of multiple measurements, each file needs to be placed in a separate subfolder for each session, identified by a unique label in the BIDS nomenclature ",
+        tags$code("(“ses-<label>”)"),
+        ". The session label, as well as a label for the performed task ",
+        tags$code("(“task-<label>”)"),
+        "also appear in the BIDS-formatted filenames. In order for the conversion process to run properly with your dataset, the number and label of sessions needs to be specified according to your study design.",
+        br(),
+        icon("book"),
+        " ",
+        tags$a(
+          href = "https://bids.neuroimaging.io/getting_started/folders_and_files/files.html#nirs",
+          "BIDS documentation: NIRS naming system",
+          target = "_blank",
+          style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
+        )
+      )
     )
   )
 }

@@ -17,8 +17,7 @@ Readme_ui <- function(id) {
   } else {
     "Instructions file not found."
   }
-
-  page_fillable(
+ page_fillable(
     card(
       style = "background-color: #f8f9fa;",
       div(
@@ -50,8 +49,25 @@ Readme_ui <- function(id) {
     ),
     card(
       actionButton(ns("save_Readme"), "Save Readme")
+    ),
+    card(
+      style = "background-color: #eef7fb; padding: 12px",
+      div(
+        style = "font-size: 1.05rem;",
+        strong("About task mapping"),
+        br(),
+        "In the first two columns (",
+        tags$code("session"),
+        " and ",
+        tags$code("task name (BIDS)"),
+        "), you will find the session numbers and task names defined in the previous step. These values will be used in the BIDS-formatted output dataset.",
+        br(), br(),
+        "In the third column (",
+        tags$code("task name (raw data)"),
+        "), please enter the corresponding task name used during data acquisition, as found in your raw data. Unlike the BIDS task name, this entry may not follow BIDS conventions and may, for example, combine the session number and task name into a single identifier."
+      )
     )
-  )
+)
 }
 
 #' Readme Shiny Module Server

@@ -30,8 +30,28 @@ datasetDescription_ui <- function(id) {
   ),
   card(
     actionButton(ns("save_json"), "Save JSON")
+  ),
+  card(
+    style = "background-color: #eef7fb; padding: 12px",
+    div(
+      style = "font-size: 1.05rem;",
+      strong("About dataset_description.json"),
+      br(),
+      "The ",
+      tags$code("dataset_description.json"),
+      " file provides general information about the dataset, including the dataset name, authors, funding information, and references to related publications.",
+      br(),
+      icon("book"),
+      " ",
+      tags$a(
+        href = "https://bids-specification.readthedocs.io/en/stable/modality-agnostic-files/dataset-description.html",
+        "BIDS documentation: dataset_description.json",
+        target = "_blank",
+        style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
+      )
+    )
   )
-  )
+)
 }
 
 #' Dataset Description Shiny Module Server
