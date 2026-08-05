@@ -67,7 +67,7 @@ Readme_ui <- function(id) {
         tags$a(
           href = "https://bids-specification.readthedocs.io/en/stable/modality-agnostic-files/dataset-description.html#readme",
           "BIDS documentation: Readme.MD",
-          target = "_blank",
+          # target = "_blank",
           style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
         ),
         br(),
@@ -76,7 +76,7 @@ Readme_ui <- function(id) {
         tags$a(
           href = "https://bids.neuroimaging.io/getting_started/templates/index.html#readmemd",
           "Template: Readme.MD",
-          target = "_blank",
+          # target = "_blank",
           style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
         )
       )

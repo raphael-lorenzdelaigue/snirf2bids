@@ -107,7 +107,7 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               tags$a(
                                 href = "https://bids-specification.readthedocs.io/en/stable/common-principles.html#filesystem-structure",
                                 "BIDS documentation: filesystem structure",
-                                target = "_blank",
+                               # target = "_blank",
                                 style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
                               ),
                               br(),
@@ -116,7 +116,7 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               tags$a(
                                 href = "https://bids-specification.readthedocs.io/en/stable/modality-specific-files/near-infrared-spectroscopy.html#nirs-recording-data",
                                 "BIDS documentation: NIRS-specific files",
-                                target = "_blank",
+                                # target = "_blank",
                                 style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
                               )))
                           )), # Button for folder browser dialog
@@ -161,7 +161,7 @@ ui <- navbarPage("SNIRF2BIDS Converter",
                               tags$a(
                                 "BIDS Validator",
                                 href = "https://bids-standard.github.io/bids-validator/",
-                                target = "_blank",
+                                # target = "_blank",
                                 style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
                               )
                             )

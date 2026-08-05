@@ -46,7 +46,7 @@ datasetDescription_ui <- function(id) {
       tags$a(
         href = "https://bids-specification.readthedocs.io/en/stable/modality-agnostic-files/dataset-description.html",
         "BIDS documentation: dataset_description.json",
-        target = "_blank",
+        # target = "_blank",
         style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
       )
     )

@@ -102,7 +102,7 @@ experimentalDesign_ui <- function(id) {
         tags$a(
           href = "https://bids.neuroimaging.io/getting_started/folders_and_files/files.html#nirs",
           "BIDS documentation: NIRS naming system",
-          target = "_blank",
+          # target = "_blank",
           style = "color:#0d6efd; text-decoration:underline; cursor:pointer;"
         )
       )
