@@ -237,6 +237,7 @@ server <- function(input, output, session) {
   #### Convert button (at the end) ####
   observeEvent(input$convert_button, {
     req(currentSourcePath(), currentConvertedPath())
+    log_file <- file.path(currentConvertedPath(), "log.txt")
     showNotification("Conversion is running...", type = "message")
 
     exp_desc <- if (input$mapping_source == "json") {
@@ -275,6 +276,7 @@ server <- function(input, output, session) {
       showNotification("✅ Conversion complete!", type = "message")
     },
     error = function(e) {
+      writeLines(e$message, log_file)
       showNotification(paste("❌ Conversion failed:", e$message), type = "error")
     })
   })

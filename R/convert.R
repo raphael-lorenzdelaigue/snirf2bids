@@ -102,6 +102,7 @@ make_output_folder <- function(file_path_reactive) {
 #' @export
 snirf2bids <- function (source_snirf, converted_root, experiment_description = NULL, routine = c("json", "folders"), py_env) {
   routine <- match.arg(routine)
+  log_file <- file.path(converted_root, "log.txt")
   if (routine == "json") {
     task_map <- read.csv(experiment_description, colClasses = c("session" = "character"))
     json_path <- check_description_json(source_snirf) # Use NIRx vendor hook
@@ -145,7 +146,15 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description = N
       }
       # Load data with MNE and convert to BIDS format
       raw <- py_env$mne$io$read_raw_snirf(source_snirf, preload = FALSE)
-      py_env$write_raw_bids(raw, bids_path, overwrite = TRUE)
+
+      tryCatch({
+        py_env$write_raw_bids(raw, bids_path) # this will cause an error, i.e., FileExistsError because the "overwrite=T" parameter is missing
+      }, error = function(e) {
+        py_last_error() # restore previous exception
+        error <- py_last_error()
+        writeLines(error$message, log_file)
+        showNotification(error$message, type = "error")
+      })
   }
 
   # In "folders" routine, extract subject ID, session number and task name from folder structure
@@ -177,7 +186,14 @@ snirf2bids <- function (source_snirf, converted_root, experiment_description = N
     )
 
     raw <- py_env$mne$io$read_raw_snirf(source_snirf, preload = FALSE)
-    py_env$write_raw_bids(raw, bids_path, overwrite = TRUE)
+    tryCatch({
+      py_env$write_raw_bids(raw, bids_path) # this will cause an error, i.e., FileExistsError because the "overwrite=T" parameter is missing
+    }, error = function(e) {
+      py_last_error() # restore previous exception
+      error <- py_last_error()
+      writeLines(error$message, log_file)
+      showNotification(error$message, type = "error")
+    })
   }
 }
 
